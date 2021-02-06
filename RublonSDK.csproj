@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5C28C0C8-26E1-4B8C-818C-F1ACA01FDBB0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RublonSDK</RootNamespace>
+    <AssemblyName>RublonSDK</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>rublonSDKSNK.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\APIMethod.cs" />
+    <Compile Include="Core\EncodingUtils.cs" />
+    <Compile Include="Core\ConsumerParamsBuilder.cs" />
+    <Compile Include="Core\Validation\DefaultResponseValidator.cs" />
+    <Compile Include="Core\Exception\APIException.cs" />
+    <Compile Include="Core\Exception\CallbackException.cs" />
+    <Compile Include="Core\Exception\ConnectionException.cs" />
+    <Compile Include="Core\Exception\DefaultAPIExceptionFactory.cs" />
+    <Compile Include="Core\Exception\IAPIExceptionFactory.cs" />
+    <Compile Include="Core\Exception\RublonException.cs" />
+    <Compile Include="Core\Validation\IResponseValidator.cs" />
+    <Compile Include="Core\Logging\IRublonLogger.cs" />
+    <Compile Include="Core\Signature\RublonMessageSigner.cs" />
+    <Compile Include="Core\Logging\NullLogger.cs" />
+    <Compile Include="Core\Rest\RESTClient.cs" />
+    <Compile Include="Core\RublonAuthParams.cs" />
+    <Compile Include="Core\RublonHttpCallback.cs" />
+    <Compile Include="Core\RublonConsumer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TwoFactor\API\BeginTransaction.cs" />
+    <Compile Include="TwoFactor\API\Credentials.cs" />
+    <Compile Include="TwoFactor\Rublon.cs" />
+    <Compile Include="TwoFactor\RublonCallback.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="rublonSDKSNK.pfx" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
