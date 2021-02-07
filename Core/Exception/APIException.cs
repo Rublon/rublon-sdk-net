@@ -173,22 +173,7 @@ namespace Rublon.Sdk.Core.Exception
             public UserBypassedException(RESTClient client) : base(client) { }
 
         }
-
-        public class SessionRestoreException : APIException
-        {
-            public SessionRestoreException(RESTClient client, string message)
-                : base(client, message)
-            {
-
-            }
-
-            public SessionRestoreException(RESTClient client)
-                : base(client, null)
-            {
-
-            }
-        }
-        
+                
         public class ApplicationDeniedException : APIException
         {
 
