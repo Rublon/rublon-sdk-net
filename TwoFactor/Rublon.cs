@@ -9,85 +9,57 @@ namespace Rublon.Sdk.TwoFactor
     /// </summary>
     public class Rublon : RublonConsumer
     {
-        /// <summary>
-        /// Service name.
-        /// </summary>
-        public const string SERVICE_NAME = "2factor";
+
+        public const string FIELD_CONFIRM_MESSAGE = "confirmMessage";
+
+        public const string FIELD_LANG = "lang";
+
+        public const string FIELD_CONFIRM_TIME_BUFFER = "confirmTimeBuffer";
 
         public IRublonLogger Logger { get; set; } = new NullLogger();
-        /// <summary>
-        /// Construct an instance.
-        /// </summary>
-        /// <param name="systemToken">Consumer's system token string.</param>
-        /// <param name="secretKey">Consumer's secret key string.</param>
+
         public Rublon(string systemToken, string secretKey)
             : this(systemToken, secretKey, DEFAULT_API_SERVER)
         {
         }
 
-        /// <summary>
-        /// Construct an instance.
-        /// </summary>
-        /// <param name="systemToken">Consumer's system token string.</param>
-        /// <param name="secretKey">Consumer's secret key string.</param>
-        /// <param name="apiServer">API server's URI</param>
         public Rublon(string systemToken, string secretKey, string apiServer)
             : base(systemToken, secretKey, apiServer)
         {
-            this.serviceName = SERVICE_NAME;
         }
 
         /// <summary>
-        /// Initializes the Rublon 2-factor authentication transaction
-        /// and returns the URL address to redirect user's browser
-        /// or NULL if user's account is not protected.
-        ///
-        /// First, method checks the account's protection status in the Rublon server for current user.
-        /// If user has protected this account, method returns the URL address.
-        /// Redirect user's browser to this URL to start the Rublon authentication process.
-        ///
-        /// If Rublon user has deleted his Rublon account or Rublon API is not available at this time,
-        /// method returns null. If so, just bypass Rublon and sign in the user.
-        ///
-        /// Notice: to use this method the configurations values (system token and secret key)
-        /// must be provided to the constructor. If not, function will throw an exception.
+        /// Initializes the Rublon 2-factor authentication transaction.
+        /// Returns the URL to which browser should be redirected in order to continue authentication process for the started transaction.
+        /// The URL will redirect to the so called Rublon prompt.
+        /// If something will fail the method will throw exception which inherits from RublonException.
+        /// When authentication process is finished in Rublon prompt the process will redirect to callbackUrl with access token and <see cref="GetCredentials(string)"/> can be called to finish authentication.
+        /// Instead of get credentials you can also use <see cref="RublonCallback"/> which contains already some logic related to getting access token parameter.
         /// </summary>
         /// <param name="callbackUrl">Callback URL address.</param>
         /// <param name="userId">User's ID in local system.</param>
         /// <param name="userEmail">User's email address.</param>
-        /// <returns></returns>
+        /// <returns>web URI to Rublon prompt for the created transaction</returns>
         public string Authorize(string callbackUrl, string userId, string userEmail)
         {
             return Authorize(callbackUrl, userId, userEmail, new JObject());
         }
 
         /// <summary>
-        /// Initializes the Rublon 2-factor authentication transaction
-        /// and returns the URL address to redirect user's browser
-        /// or NULL if user's account is not protected.
-        ///
-        /// First, method checks the account's protection status in the Rublon server for current user.
-        /// If user has protected this account, method returns the URL address.
-        /// Redirect user's browser to this URL to start the Rublon authentication process.
-        ///
-        /// If Rublon user has deleted his Rublon account or Rublon API is not available at this time,
-        /// method returns null. If so, just bypass Rublon and sign in the user.
-        ///
-        /// Notice: to use this method the configurations values (system token and secret key)
-        /// must be provided to the constructor. If not, function will throw an exception.
+        /// Works similar as <see cref="Authorize(string, string, string)"/> but allows for adding additional so called consumer params.       
         /// </summary>
         /// <param name="callbackUrl">Callback URL address.</param>
         /// <param name="userId">User's ID in local system.</param>
         /// <param name="userEmail">User's email address.</param>
-        /// <param name="consumerParams">Additional transaction parameters.</param>
-        /// <returns></returns>
+        /// <param name="consumerParams">Additional transaction parameters. The class <seealso cref="ConsumerParamsBuilder"/> is a builder which can be used to build proper consumer params.</param>
+        /// <returns>web URI to Rublon prompt for the created transaction</returns>
         public string Authorize(string callbackUrl, string userId, string userEmail, JObject consumerParams)
         {
             TestConfiguration();
 
-            if (!string.IsNullOrEmpty(this.languge))
+            if (!string.IsNullOrEmpty(Language))
             {
-                consumerParams.Add(RublonAuthParams.FIELD_LANG, languge);
+                consumerParams.Add(FIELD_LANG, Language);
             }
 
             var beginTransaction = new BeginTransaction(this, callbackUrl, userEmail, userId, consumerParams);
@@ -142,10 +114,10 @@ namespace Rublon.Sdk.TwoFactor
         /// <returns>URL to redirect or NULL if user is not protected.</returns>
         public string Confirm(string callbackUrl, string userId, string userEmail, string confirmMessage, JObject consumerParams)
         {
-            consumerParams.Add(RublonAuthParams.FIELD_CONFIRM_MESSAGE, confirmMessage);
-            if (!string.IsNullOrEmpty(languge))
+            consumerParams.Add(FIELD_CONFIRM_MESSAGE, confirmMessage);
+            if (!string.IsNullOrEmpty(Language))
             {
-                consumerParams.Add(RublonAuthParams.FIELD_LANG, languge);
+                consumerParams.Add(FIELD_LANG, Language);
             }
 
             return Authorize(callbackUrl, userId, userEmail, consumerParams);
@@ -188,18 +160,18 @@ namespace Rublon.Sdk.TwoFactor
         /// <returns>URL to redirect or NULL if user is not protected.</returns>
         public string ConfirmWithBuffer(string callbackUrl, string userId, string userEmail, string confirmMessage, int timeBuffer, JObject consumerParams)
         {
-            consumerParams.Add(RublonAuthParams.FIELD_CONFIRM_TIME_BUFFER, timeBuffer);
+            consumerParams.Add(FIELD_CONFIRM_TIME_BUFFER, timeBuffer);
             return Confirm(callbackUrl, userId, userEmail, confirmMessage, consumerParams);
         }
 
         /// <summary>
-        /// Authenticate user and get user's credentials using one-time use access token.
+        /// Finishes authentication for given accessToken and get user's credentials using one-time use access token.
         /// 
         /// One-time use access token is a session identifier which will be deleted after first usage.
         /// This method can be called only once in authentication process.
         /// </summary>
-        /// <param name="accessToken"></param>
-        /// <returns></returns>
+        /// <param name="accessToken">access token</param>
+        /// <returns>Credentials</returns>
         public Credentials GetCredentials(string accessToken)
         {
             var credentials = new Credentials(this, accessToken);

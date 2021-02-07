@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json.Linq;
-using Rublon.Sdk.Core;
 using Rublon.Sdk.Core.Rest;
 using Rublon.Sdk.Core.Validation;
 
@@ -14,11 +13,7 @@ namespace Rublon.Sdk.Core.Exception
             public string Name { get; set; }
         }
 
-        /// <summary>
-        /// Creates the APIException instance by the API response.
-        /// </summary>
-        /// <param name="client">REST client instance.</param>
-        /// <returns></returns>
+       
         public APIException createException(RESTClient client)
         {
             APIException resultException = null;
@@ -26,8 +21,8 @@ namespace Rublon.Sdk.Core.Exception
             try
             {               
                 var responseInJSON = JObject.Parse(client.RawResponse);                
-                var status = responseInJSON.Value<string>(DefaultResponseValidator.FIELD_STATUS);
-                if (status != null && status == DefaultResponseValidator.STATUS_ERROR)
+                var status = responseInJSON.Value<string>(DefaultAPIResponseValidator.FIELD_STATUS);
+                if (status != null && status == DefaultAPIResponseValidator.STATUS_ERROR)
                 {
                     var result = responseInJSON.Value<JObject>(APIMethod.FIELD_RESULT);
                     if (result != null)
@@ -48,12 +43,6 @@ namespace Rublon.Sdk.Core.Exception
             return resultException;
         }
 
-        /// <summary>
-        /// Get the exception instance by given name and arguments.
-        /// </summary>
-        /// <param name="name">Exception class name.</param>
-        /// <param name="args">Arguments array.</param>
-        /// <returns></returns>
         private static APIException createException(string name, RESTClient client, string message, string itemName)
         {
             APIException result = null;
@@ -79,9 +68,6 @@ namespace Rublon.Sdk.Core.Exception
                     break;
                 case "unsupportedversionexception":
                     result = new APIException.UnsupportedVersionException(client, message);
-                    break;
-                case "usernotfoundexception":
-                    result = new APIException.UserNotFoundException(client, message);
                     break;
                 case "accesstokenexpiredexception":
                     result = new APIException.AccessTokenExpiredException(client, message);

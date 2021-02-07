@@ -6,7 +6,7 @@ using System.Net;
 
 namespace Rublon.Sdk.Core.Validation
 {
-    internal class DefaultResponseValidator : IResponseValidator
+    internal class DefaultAPIResponseValidator : IAPIResponseValidator
     {
 
         private JObject response;
@@ -33,9 +33,6 @@ namespace Rublon.Sdk.Core.Validation
 
         public string SecretKey { get; set; }
 
-        /// <summary>
-        /// Validate the API response.
-        /// </summary>
         public void validateResponse()
         {
             assertResponseContentAndResponseCodeIsValidOrThrow();
@@ -94,7 +91,7 @@ namespace Rublon.Sdk.Core.Validation
                 throw new APIException.MissingHeaderException(RestClient, RESTClient.HEADER_NAME_SIGNATURE);
             }
 
-            if (!RublonMessageSigner.VerifyData(RestClient.RawResponse, SecretKey, signature))
+            if (!RublonMessageSigner.VerifySignatureForData(RestClient.RawResponse, SecretKey, signature))
             {
                 throw new APIException.InvalidSignatureException(RestClient, "Invalid response signature: " + signature);
             }

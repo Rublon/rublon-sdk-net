@@ -8,17 +8,24 @@ namespace Rublon.Sdk.Core
     public abstract class APIMethod
     {       
         public const string FIELD_RESULT = "result";
+        public const string FIELD_SYSTEM_TOKEN = "systemToken";
 
         protected RublonConsumer rublon;
         protected string rawResponseBody;
         protected string responseStatus;
-        protected JObject responseResult;
+        protected JObject methodCallResponse;
+
+        public static class RublonCommonParams
+        {
+            public const string FIELD_USER_ID = "appUserId";
+
+        }
 
         public RESTClient RestClient { get; set; }
 
         public IRublonLogger Logger { get; set; } = new NullLogger();
 
-        public IResponseValidator ResponseValidator { get; set; } = new DefaultResponseValidator();
+        public IAPIResponseValidator ResponseValidator { get; set; } = new DefaultAPIResponseValidator();
 
         /// <summary>
         /// Construct the API method instance.
@@ -31,7 +38,7 @@ namespace Rublon.Sdk.Core
         }
 
         /// <summary>
-        /// Perform HTTP request.
+        /// Performs the method HTTP request.
         /// </summary>
         public void Perform()
         {
@@ -52,7 +59,7 @@ namespace Rublon.Sdk.Core
                 );
             validateReponse();
             
-            responseResult = JObject.Parse(this.rawResponseBody).Value<JObject>(FIELD_RESULT);
+            methodCallResponse = JObject.Parse(this.rawResponseBody).Value<JObject>(FIELD_RESULT);
         }
 
         /// <summary>
@@ -68,7 +75,7 @@ namespace Rublon.Sdk.Core
         protected virtual JObject getParams()
         {
             var parameters = new JObject();
-            parameters.Add(RublonAuthParams.FIELD_SYSTEM_TOKEN, rublon.SystemToken);
+            parameters.Add(FIELD_SYSTEM_TOKEN, rublon.SystemToken);
             return parameters;
         }
 

@@ -7,14 +7,13 @@ namespace Rublon.Sdk.TwoFactor
 {
     public class BeginTransaction : APIMethod
     {
-        /// <summary>
-        /// Field name for the web URI in the API response.
-        /// </summary>
+        
         public const string FIELD_WEB_URI = "webURI";
 
-        /// <summary>
-        /// API request URI path.
-        /// </summary>
+        public const string FIELD_CALLBACK_URL = "callbackUrl";
+
+        public const string FIELD_USER_EMAIL = "userEmail";
+        
         public const string REQUEST_URI_PATH = "/api/transaction/init";
 
         protected string callbackUrl;
@@ -53,35 +52,27 @@ namespace Rublon.Sdk.TwoFactor
         }
 
         /// <summary>
-        /// Get the web URI from the API response and redirect the user's web browser.
+        /// Gets the web URI to the Rublon prompt from the API response. 
         /// </summary>
         /// <returns></returns>
         public string GetWebURI()
         {
-            return responseResult.Value<string>(FIELD_WEB_URI);
+            return methodCallResponse.Value<string>(FIELD_WEB_URI);
         }
 
-        /// <summary>
-        /// Get the API request URL.
-        /// </summary>
-        /// <returns></returns>
         protected override string getUrl()
         {
             return rublon.APIServer + REQUEST_URI_PATH;
         }
 
-        /// <summary>
-        /// Get the API request parameters.
-        /// </summary>
-        /// <returns></returns>
         protected override JObject getParams()
         {
             var baseParameters = base.getParams();
             var parameters = new JObject(consumerParams);
             parameters.Merge(baseParameters);
-            parameters.Add(RublonAuthParams.FIELD_USER_ID, userId);
-            parameters.Add(RublonAuthParams.FIELD_CALLBACK_URL, callbackUrl);
-            parameters.Add(RublonAuthParams.FIELD_USER_EMAIL, userEmail.ToLower());
+            parameters.Add(RublonCommonParams.FIELD_USER_ID, userId);
+            parameters.Add(FIELD_CALLBACK_URL, callbackUrl);
+            parameters.Add(FIELD_USER_EMAIL, userEmail.ToLower());
 
             return parameters;
         }

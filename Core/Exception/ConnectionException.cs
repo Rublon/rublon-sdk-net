@@ -1,8 +1,5 @@
 ﻿namespace Rublon.Sdk.Core.Exception
 {
-    /// <summary>
-    /// Connection error exception
-    /// </summary>
     public class ConnectionException : RublonException
     {
         public ConnectionException(string message)

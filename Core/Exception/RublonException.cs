@@ -1,8 +1,5 @@
 ﻿namespace Rublon.Sdk.Core.Exception
 {
-    /// <summary>
-    /// Exception class.
-    /// </summary>
     public class RublonException : System.Exception
     {
         public RublonException(string message)

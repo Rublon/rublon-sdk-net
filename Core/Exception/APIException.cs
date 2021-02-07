@@ -4,7 +4,7 @@ using System;
 namespace Rublon.Sdk.Core.Exception
 {
     /// <summary>
-    /// API exception class.
+    /// API exceptions thrown when Rublon Authentication  server returns error.
     /// </summary>
     public class APIException : RublonException
     {
@@ -14,7 +14,7 @@ namespace Rublon.Sdk.Core.Exception
         /// <summary>
         /// Construct the exception instance.
         /// </summary>
-        /// <param name="client">REST client instance.</param>
+        /// <param name="client">REST client instance which exectuted the request to Rublon.</param>
         public APIException(RESTClient client)
             : this(client, null)
         {
@@ -24,16 +24,16 @@ namespace Rublon.Sdk.Core.Exception
         /// <summary>
         /// Construct the exception instance.
         /// </summary>
-        /// <param name="client">REST client instance.</param>
+        /// <param name="client">REST client instance, which exectuted the request to Rublon.</param>
         /// <param name="message">Exception message.</param>
         public APIException(RESTClient client, string message)
             : base(message)
         {
             this.client = client;
         }
-        
+
         /// <summary>
-        /// Get REST client instance.
+        /// Get REST client instance, which exectuted the request to Rublon.
         /// </summary>
         public RESTClient Client
         {
@@ -174,22 +174,6 @@ namespace Rublon.Sdk.Core.Exception
 
         }
 
-        //TODO: not neccessary
-        public class UserNotFoundException : APIException
-        {
-            public UserNotFoundException(RESTClient client, string message)
-                : base(client, message)
-            {
-
-            }
-
-            public UserNotFoundException(RESTClient client)
-                : base(client, null)
-            {
-
-            }
-        }
-
         public class SessionRestoreException : APIException
         {
             public SessionRestoreException(RESTClient client, string message)
@@ -217,7 +201,6 @@ namespace Rublon.Sdk.Core.Exception
             
         }
 
-        //TODO: probably not neccessary
         public class UserDeniedException : APIException
         {
 

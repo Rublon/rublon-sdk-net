@@ -11,34 +11,29 @@ namespace Rublon.Sdk.Core.Signature
         }
        
         /// <summary>
-        /// Sign given data with secret key and get the signature
+        /// Sign given data with secret key and returns a signature
         /// </summary>
-        /// <param name="rawData">Raw string data to sign</param>
+        /// <param name="data">Raw string data to sign</param>
         /// <param name="secretKey">Secret key</param>
-        /// <returns></returns>
-        public string Sign(string rawData, string secretKey)
+        /// <returns>signature of the data</returns>
+        public string SignData(string data, string secretKey)
         {
-            return HmacSHA256(rawData, secretKey);
+            return HmacSHA256(data, secretKey);
         }
 
         /// <summary>
-        /// Verify data by signature and secret key
+        /// Verifies whether <paramref name="signature"/> for <paramref name="data"/> is valid.
         /// </summary>
-        /// <param name="data">Data to sign</param>
+        /// <param name="data">data</param>
         /// <param name="secretKey">Secret key used to create the signature</param>
-        /// <param name="sign">Computed signature to verify</param>
-        /// <returns></returns>
-        public bool VerifyData(string data, string secretKey, string sign)
+        /// <param name="signature">Signature to verify</param>
+        /// <returns>true if signature is valid false otherwise</returns>
+        public bool VerifySignatureForData(string data, string secretKey, string signature)
         {
-            var dataSign = Sign(data, secretKey);
-            return dataSign == sign;
+            var dataSign = SignData(data, secretKey);
+            return dataSign == signature;
         }
-
-        /// <summary>
-        /// Compute SHA256 hash of giver text
-        /// </summary>
-        /// <param name="value">Text to hash</param>
-        /// <returns></returns>
+        
         public static string SHA256(string value)
         {
             var builder = new StringBuilder();
@@ -57,11 +52,6 @@ namespace Rublon.Sdk.Core.Signature
             return builder.ToString();
         }
 
-        /// <summary>
-        /// Compute HMAK hash of giver text
-        /// </summary>
-        /// <param name="value">Text to hash</param>
-        /// <returns></returns>
         public static string HmacSHA256(string value, string key)
         {
             var builder = new StringBuilder();

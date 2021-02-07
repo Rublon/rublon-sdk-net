@@ -1,5 +1,4 @@
-﻿using Rublon.Sdk.Core.Exception;
-using Rublon.Sdk.Core.Rest;
+﻿using Rublon.Sdk.Core.Rest;
 
 namespace Rublon.Sdk.Core.Exception
 {

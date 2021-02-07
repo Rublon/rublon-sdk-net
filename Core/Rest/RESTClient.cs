@@ -1,7 +1,5 @@
-﻿using Rublon;
-using Rublon.Sdk.Core.Exception;
+﻿using Rublon.Sdk.Core.Exception;
 using Rublon.Sdk.Core.Signature;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -10,51 +8,40 @@ namespace Rublon.Sdk.Core.Rest
 {
     public class RESTClient
     {
-        
-        /// <summary>
-        /// Connection timeout in seconds.
-        /// </summary>
         public const int TIMEOUT = 30;
 
-        /// <summary>
-        /// User agent string.
-        /// </summary>
         public const string USER_AGENT = "rublon-net-sdk";
 
-        /// <summary>
-        /// Value of the "Content-Type" HTTP header
-        /// </summary>
         public const string HEADER_VALUE_CONTENT_TYPE = "Content-Type: application/json";
 
-        /// <summary>
-        /// Value of the "Accept" HTTP header
-        /// </summary>
         public const string HEADER_VALUE_ACCEPT = "Accept: application/json, text/javascript, */*; q=0.01";
 
-        /// <summary>
-        /// Name of the custom HTTP header to send the library's version
-        /// </summary>
         public const string HEADER_NAME_VERSION = "X-Rublon-API-Version";
 
-        /// <summary>
-        /// Name of the custom HTTP header to send the library's version date
-        /// </summary>
         public const string HEADER_NAME_VERSION_DATE = "X-Rublon-API-Version-Date";
 
-        /// <summary>
-        /// Name of the custom HTTP heaader to send the library's platform
-        /// </summary>
         public const string HEADER_NAME_PLATFORM = "X-Rublon-Technology";
 
-        /// <summary>
-        /// Name of the custom HTTP header to send the library's technology
-        /// </summary>
-        public const string HEADER_NAME_SIGNATURE = "X-Rublon-Signature";                    
+        public const string HEADER_NAME_SIGNATURE = "X-Rublon-Signature";
 
+        /// <summary>
+        /// API version number.
+        /// </summary>
+        public const string VERSION = "3.8.0";
+
+        /// <summary>
+        /// API version date.
+        /// </summary>
+        public const string VERSION_DATE = "2015-09-10";
+
+        /// <summary>
+        /// Library target platform.
+        /// </summary>
+        public const string PLATFORM = ".NET";
 
         private HttpWebRequest httpRequest;        
-        protected string rawResponse;
-        protected HttpWebResponse response;
+        private string rawResponse;
+        private HttpWebResponse response;
         private string secretKey;
 
         public RublonMessageSigner RublonMessageSigner
@@ -64,9 +51,9 @@ namespace Rublon.Sdk.Core.Rest
         } = new RublonMessageSigner();
 
         /// <summary>
-        /// Construct REST client instance
+        /// Constructs REST client instance with <paramref name="secretKey"/> which will be used to sign the message.
         /// </summary>
-        /// <param name="rublon">RublonConsumer instance</param>
+        /// <param name="secretKey">secret key</param>        
         public RESTClient(string secretKey)
         {
             this.secretKey = secretKey;
@@ -75,11 +62,12 @@ namespace Rublon.Sdk.Core.Rest
         public RESTClient() : this("") { }
 
         /// <summary>
-        /// Perform the request
+        /// Performs the request
         /// </summary>
-        /// <param name="url">Connection URL address</param>
-        /// <param name="rawPostBody">Raw POST body</param>
-        /// <returns>Raw HTTP response body</returns>
+        /// <param name="url">Connection URL</param>
+        /// <param name="rawPostBody">Raw POST body (json)</param>
+        /// <returns>Raw HTTP response body (json)</returns>
+        /// <exception cref="ConnectionException">When the problem with connecting to the Rublon server occurred</exception>
         public virtual string PerformRequest(string url, string rawPostBody)
         {
             setupHTTPRequest(url,rawPostBody);
@@ -120,11 +108,10 @@ namespace Rublon.Sdk.Core.Rest
             httpRequest.ContentType = HEADER_VALUE_CONTENT_TYPE;
             httpRequest.Accept = HEADER_VALUE_ACCEPT;
             httpRequest.UserAgent = USER_AGENT;
-            httpRequest.Headers.Add(HEADER_NAME_VERSION, RublonConsumer.VERSION);
-            httpRequest.Headers.Add(HEADER_NAME_VERSION, RublonConsumer.VERSION);
-            httpRequest.Headers.Add(HEADER_NAME_VERSION_DATE, RublonConsumer.VERSION_DATE);
-            httpRequest.Headers.Add(HEADER_NAME_PLATFORM, RublonConsumer.PLATFORM);
-            var signature = RublonMessageSigner.Sign(rawPostBody, this.secretKey);
+            httpRequest.Headers.Add(HEADER_NAME_VERSION, VERSION);
+            httpRequest.Headers.Add(HEADER_NAME_VERSION_DATE, VERSION_DATE);
+            httpRequest.Headers.Add(HEADER_NAME_PLATFORM, PLATFORM);
+            var signature = RublonMessageSigner.SignData(rawPostBody, this.secretKey);
             httpRequest.Headers.Add(HEADER_NAME_SIGNATURE, signature);
             httpRequest.Timeout = TIMEOUT * 1000;
             httpRequest.Method = "POST";
@@ -142,9 +129,9 @@ namespace Rublon.Sdk.Core.Rest
         }
         
         /// <summary>
-        /// Get the HTTP response status code.
+        /// HTTP response status code. Usually 200 (OK) or 400 (bad request - which means API Exception)
         /// </summary>
-        /// <returns></returns>
+        /// <returns>performed request status code</returns>
         public virtual HttpStatusCode GetHTTPStatusCode()
         {            
             return response.StatusCode;
@@ -153,7 +140,7 @@ namespace Rublon.Sdk.Core.Rest
         /// <summary>
         /// Get the Rublon signature header from response.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Rublon Signature header</returns>
         public string GetSignature()
         {
             var headers = response.Headers.GetValues(HEADER_NAME_SIGNATURE);
@@ -166,7 +153,7 @@ namespace Rublon.Sdk.Core.Rest
         }
 
         /// <summary>
-        /// Get the raw response body string.
+        /// Get the raw response body string. Which can be parsed and used to get some action specific parameters
         /// </summary>
         virtual public string RawResponse
         {

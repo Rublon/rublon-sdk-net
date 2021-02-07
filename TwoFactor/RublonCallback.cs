@@ -8,10 +8,6 @@ namespace Rublon.Sdk.TwoFactor
         protected new Rublon rublon;
         protected Credentials credentials;
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="rublon">Rublon instance.</param>
         public RublonCallback(Rublon rublon)
             : base(rublon)
         {

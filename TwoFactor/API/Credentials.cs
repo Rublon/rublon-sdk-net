@@ -5,9 +5,6 @@ namespace Rublon.Sdk.TwoFactor
 {
     public class Credentials : APIMethod
     {
-        /// <summary>
-        /// API request URI path.
-        /// </summary>
         public const string REQUEST_URI_PATH = "/api/transaction/credentials";
 
         /// <summary>
@@ -20,15 +17,12 @@ namespace Rublon.Sdk.TwoFactor
         /// </summary>
         public const string FIELD_CONFIRM_RESULT = "answer";
 
-        /// <summary>
-        /// Positive confirmation result value.
-        /// </summary>
-        public const string CONFIRM_RESULT_YES = "true";
+        public const string FIELD_ACCESS_TOKEN = "accessToken";
 
         /// <summary>
-        /// Nagative confirmation result value.
+        /// Name of the field with profile ID.
         /// </summary>
-        public const string CONFIRM_RESULT_NO = "false";
+        public const string FIELD_PROFILE_ID = "profileId";
 
         protected string accessToken;
 
@@ -49,7 +43,7 @@ namespace Rublon.Sdk.TwoFactor
         /// <returns></returns>
         public string GetUserId()
         {
-            return responseResult.Value<string>(RublonAuthParams.FIELD_USER_ID);
+            return methodCallResponse.Value<string>(RublonCommonParams.FIELD_USER_ID);
         }
 
         /// <summary>
@@ -58,7 +52,7 @@ namespace Rublon.Sdk.TwoFactor
         /// <returns></returns>
         public string GetProfileId()
         {
-            return responseResult.Value<string>(RublonAuthParams.FIELD_PROFILE_ID);
+            return methodCallResponse.Value<string>(FIELD_PROFILE_ID);
         }
 
         /// <summary>
@@ -67,7 +61,7 @@ namespace Rublon.Sdk.TwoFactor
         /// <returns></returns>
         public string GetDeviceId()
         {
-            return responseResult.Value<string>(FIELD_DEVICE_ID);
+            return methodCallResponse.Value<string>(FIELD_DEVICE_ID);
         }
 
         /// <summary>
@@ -76,26 +70,18 @@ namespace Rublon.Sdk.TwoFactor
         /// <returns></returns>
         public string GetConfirmResult()
         {
-            return responseResult.Value<string>(FIELD_CONFIRM_RESULT);
+            return methodCallResponse.Value<string>(FIELD_CONFIRM_RESULT);
         }
 
-        /// <summary>
-        /// Get the API request URL.
-        /// </summary>
-        /// <returns></returns>
         protected override string getUrl()
         {
             return rublon.APIServer + REQUEST_URI_PATH;
         }
 
-        /// <summary>
-        /// Get the API request parameters.
-        /// </summary>
-        /// <returns></returns>
         protected override JObject getParams()
         {
             var baseParameters = base.getParams();
-            baseParameters.Add(RublonAuthParams.FIELD_ACCESS_TOKEN, accessToken);
+            baseParameters.Add(FIELD_ACCESS_TOKEN, accessToken);
 
             return baseParameters;
         }

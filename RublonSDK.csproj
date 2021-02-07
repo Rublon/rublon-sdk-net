@@ -7,8 +7,8 @@
     <ProjectGuid>{5C28C0C8-26E1-4B8C-818C-F1ACA01FDBB0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RublonSDK</RootNamespace>
-    <AssemblyName>RublonSDK</AssemblyName>
+    <RootNamespace>Rublon.Sdk</RootNamespace>
+    <AssemblyName>Rublon-SDK</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -46,21 +46,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\APIMethod.cs" />
-    <Compile Include="Core\EncodingUtils.cs" />
     <Compile Include="Core\ConsumerParamsBuilder.cs" />
-    <Compile Include="Core\Validation\DefaultResponseValidator.cs" />
+    <Compile Include="Core\Validation\DefaultAPIResponseValidator.cs" />
     <Compile Include="Core\Exception\APIException.cs" />
     <Compile Include="Core\Exception\CallbackException.cs" />
     <Compile Include="Core\Exception\ConnectionException.cs" />
     <Compile Include="Core\Exception\DefaultAPIExceptionFactory.cs" />
     <Compile Include="Core\Exception\IAPIExceptionFactory.cs" />
     <Compile Include="Core\Exception\RublonException.cs" />
-    <Compile Include="Core\Validation\IResponseValidator.cs" />
+    <Compile Include="Core\Validation\IAPIResponseValidator.cs" />
     <Compile Include="Core\Logging\IRublonLogger.cs" />
     <Compile Include="Core\Signature\RublonMessageSigner.cs" />
     <Compile Include="Core\Logging\NullLogger.cs" />
     <Compile Include="Core\Rest\RESTClient.cs" />
-    <Compile Include="Core\RublonAuthParams.cs" />
     <Compile Include="Core\RublonHttpCallback.cs" />
     <Compile Include="Core\RublonConsumer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="README.md" />
     <None Include="rublonSDKSNK.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
