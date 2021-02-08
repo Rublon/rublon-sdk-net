@@ -10,11 +10,7 @@ namespace Rublon.Sdk.TwoFactor
     public class Rublon : RublonConsumer
     {
 
-        public const string FIELD_CONFIRM_MESSAGE = "confirmMessage";
-
         public const string FIELD_LANG = "lang";
-
-        public const string FIELD_CONFIRM_TIME_BUFFER = "confirmTimeBuffer";
 
         public IRublonLogger Logger { get; set; } = new NullLogger();
 
@@ -66,103 +62,7 @@ namespace Rublon.Sdk.TwoFactor
             beginTransaction.Logger = Logger;
             beginTransaction.Perform();
             return beginTransaction.GetWebURI();
-        }
-
-        /// <summary>
-        /// Authenticate user and perform an additional confirmation of the transaction.
-        /// 
-        /// This method requires user to use the Rublon mobile app
-        /// (even if the Trusted Device is available)
-        /// and confirm transaction to maintain higher security level.
-        /// 
-        /// For users which are using the email-2-factor method, the question
-        /// will be displayed in the web browser after clicking the confirmation
-        /// link sent to the user's email address.
-        /// 
-        /// The message passed in the $customMessage argument will be displayed
-        /// in the confirmation dialog.
-        /// </summary>
-        /// <param name="callbackUrl">Callback URL address.</param>
-        /// <param name="userId">User's ID in local system.</param>
-        /// <param name="userEmail">User's email address.</param>
-        /// <param name="confirmMessage">Message to display (max. 255 bytes).</param>
-        /// <returns>URL to redirect or NULL if user is not protected.</returns>
-        public string Confirm(string callbackUrl, string userId, string userEmail, string confirmMessage)
-        {
-            return Confirm(callbackUrl, userId, userEmail, confirmMessage, new JObject());
-        }
-
-        /// <summary>
-        /// Authenticate user and perform an additional confirmation of the transaction.
-        /// 
-        /// This method requires user to use the Rublon mobile app
-        /// (even if the Trusted Device is available)
-        /// and confirm transaction to maintain higher security level.
-        /// 
-        /// For users which are using the email-2-factor method, the question
-        /// will be displayed in the web browser after clicking the confirmation
-        /// link sent to the user's email address.
-        /// 
-        /// The message passed in the $customMessage argument will be displayed
-        /// in the confirmation dialog.
-        /// </summary>
-        /// <param name="callbackUrl">Callback URL address.</param>
-        /// <param name="userId">User's ID in local system.</param>
-        /// <param name="userEmail">User's email address.</param>
-        /// <param name="confirmMessage">Message to display (max. 255 bytes).</param>
-        /// <param name="consumerParams">Additional transaction parameters.</param>
-        /// <returns>URL to redirect or NULL if user is not protected.</returns>
-        public string Confirm(string callbackUrl, string userId, string userEmail, string confirmMessage, JObject consumerParams)
-        {
-            consumerParams.Add(FIELD_CONFIRM_MESSAGE, confirmMessage);
-            if (!string.IsNullOrEmpty(Language))
-            {
-                consumerParams.Add(FIELD_LANG, Language);
-            }
-
-            return Authorize(callbackUrl, userId, userEmail, consumerParams);
-        }
-
-        /// <summary>
-        /// Perform a confirmation of the transaction without user's action needed
-        /// if the time buffer after previous confirmation has not been reached.
-        /// 
-        /// If the amount of seconds after the previous transaction is less than
-        /// given time buffer, Rublon will confirm the transaction without user's action.
-        /// In other cases, this method will behave the same as the Rublon2Factor.confirm() method.
-        /// </summary>
-        /// <param name="callbackUrl">Callback URL address.</param>
-        /// <param name="userId">User's local ID.</param>
-        /// <param name="userEmail">User's email address.</param>
-        /// <param name="confirmMessage">Message to display (max. 255 bytes).</param>
-        /// <param name="timeBuffer">Amount of seconds from last confirmation.</param>
-        /// <param name="consumerParams">Additional transaction parameters.</param>
-        /// <returns>URL to redirect or NULL if user is not protected.</returns>
-        public string ConfirmWithBuffer(string callbackUrl, string userId, string userEmail, string confirmMessage, int timeBuffer)
-        {
-            return ConfirmWithBuffer(callbackUrl, userId, userEmail, confirmMessage, timeBuffer, new JObject());
-        }
-
-        /// <summary>
-        /// Perform a confirmation of the transaction without user's action needed
-        /// if the time buffer after previous confirmation has not been reached.
-        /// 
-        /// If the amount of seconds after the previous transaction is less than
-        /// given time buffer, Rublon will confirm the transaction without user's action.
-        /// In other cases, this method will behave the same as the Rublon2Factor.confirm() method.
-        /// </summary>
-        /// <param name="callbackUrl">Callback URL address.</param>
-        /// <param name="userId">User's local ID.</param>
-        /// <param name="userEmail">User's email address.</param>
-        /// <param name="confirmMessage">Message to display (max. 255 bytes).</param>
-        /// <param name="timeBuffer">Amount of seconds from last confirmation.</param>
-        /// <param name="consumerParams">Additional transaction parameters.</param>
-        /// <returns>URL to redirect or NULL if user is not protected.</returns>
-        public string ConfirmWithBuffer(string callbackUrl, string userId, string userEmail, string confirmMessage, int timeBuffer, JObject consumerParams)
-        {
-            consumerParams.Add(FIELD_CONFIRM_TIME_BUFFER, timeBuffer);
-            return Confirm(callbackUrl, userId, userEmail, confirmMessage, consumerParams);
-        }
+        }        
 
         /// <summary>
         /// Finishes authentication for given accessToken and get user's credentials using one-time use access token.
