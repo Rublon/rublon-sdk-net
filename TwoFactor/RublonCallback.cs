@@ -17,15 +17,15 @@ namespace Rublon.Sdk.TwoFactor
         /// <summary>
         /// Finalize transaction for state "OK".
         /// </summary>
-        protected override void finalizeTransaction()
+        protected override void FinalizeTransaction()
         {
-            base.finalizeTransaction();
+            base.FinalizeTransaction();
             try
             {
-                var accessToken = getAccessToken();
+                var accessToken = GetAccessToken();
                 credentials = rublon.GetCredentials(accessToken);
                 var userId = credentials.GetUserId();
-                userAuthenticated(userId);
+                UserAuthenticated(userId);
             }
             catch (ConnectionException ex)
             {

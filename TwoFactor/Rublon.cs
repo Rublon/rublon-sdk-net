@@ -36,20 +36,20 @@ namespace Rublon.Sdk.TwoFactor
         /// <param name="userId">User's ID in local system.</param>
         /// <param name="userEmail">User's email address.</param>
         /// <returns>web URI to Rublon prompt for the created transaction</returns>
-        public string Authorize(string callbackUrl, string userId, string userEmail)
+        public string Auth(string callbackUrl, string userId, string userEmail)
         {
-            return Authorize(callbackUrl, userId, userEmail, new JObject());
+            return Auth(callbackUrl, userId, userEmail, new JObject());
         }
 
         /// <summary>
-        /// Works similar as <see cref="Authorize(string, string, string)"/> but allows for adding additional so called consumer params.       
+        /// Works similar as <see cref="Auth(string, string, string)"/> but allows for adding additional so called consumer params.       
         /// </summary>
         /// <param name="callbackUrl">Callback URL address.</param>
         /// <param name="userId">User's ID in local system.</param>
         /// <param name="userEmail">User's email address.</param>
         /// <param name="consumerParams">Additional transaction parameters. The class <seealso cref="ConsumerParamsBuilder"/> is a builder which can be used to build proper consumer params.</param>
         /// <returns>web URI to Rublon prompt for the created transaction</returns>
-        public string Authorize(string callbackUrl, string userId, string userEmail, JObject consumerParams)
+        public string Auth(string callbackUrl, string userId, string userEmail, JObject consumerParams)
         {
             TestConfiguration();
 

@@ -40,24 +40,24 @@ namespace Rublon.Sdk.Core
         /// </summary>
         public virtual void Call()
         {
-            var state = this.getState().ToLower();
+            var state = this.GetState().ToLower();
             if (state == STATE_OK)
             {
-                this.finalizeTransaction();
+                this.FinalizeTransaction();
             }
             else if (state == STATE_ERROR)
             {
-                this.handleError();
+                this.HandleError();
             }
             else
             {
-                handleCancel();
+                HandleCancel();
             }
         }
 
-        protected virtual void finalizeTransaction()
+        protected virtual void FinalizeTransaction()
         {
-            var token = getAccessToken();
+            var token = GetAccessToken();
             if (string.IsNullOrEmpty(token))
             {
                 throw new CallbackException("Missing access token.");
@@ -69,28 +69,28 @@ namespace Rublon.Sdk.Core
         /// Handle authentication success.
         /// </summary>
         /// <param name="profileId"></param>
-        protected abstract void userAuthenticated(string profileId);
+        protected abstract void UserAuthenticated(string profileId);
 
         /// <summary>
         /// Handle state "error".
         /// </summary>
-        protected abstract void handleError();
+        protected abstract void HandleError();
 
         /// <summary>
         /// Handle state "cancel".
         /// </summary>
-        protected abstract void handleCancel();
+        protected abstract void HandleCancel();
 
         /// <summary>
         /// Get state from HTTP GET parameters or NULL if not present.
         /// </summary>
         /// <returns>string|NULL</returns>
-        protected abstract string getState();
+        protected abstract string GetState();
 
         /// <summary>
         /// Get access token from HTTP GET parameters or NULL if not present.
         /// </summary>
         /// <returns></returns>
-        protected abstract string getAccessToken();
+        protected abstract string GetAccessToken();
     }
 }
