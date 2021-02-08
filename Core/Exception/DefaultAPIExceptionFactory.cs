@@ -84,9 +84,6 @@ namespace Rublon.Sdk.Core.Exception
                 case "applicationdeniedexception":
                     result = new APIException.ApplicationDeniedException(client, message);
                     break;
-                case "userdeniedexception":
-                    result = new APIException.UserDeniedException(client, message);
-                    break;
                 case "transactionlockedexception":
                     result = new APIException.TransactionLockedException(client, message);
                     break;

@@ -186,15 +186,6 @@ namespace Rublon.Sdk.Core.Exception
             
         }
 
-        public class UserDeniedException : APIException
-        {
-
-            public UserDeniedException(RESTClient client, String message)
-            :base(client, message){}
-            public UserDeniedException(RESTClient client)
-            : base(client, null) { }
-        }
-
         public class UnauthorizedUserException : APIException
         {
             public UnauthorizedUserException(RESTClient client, string message)
