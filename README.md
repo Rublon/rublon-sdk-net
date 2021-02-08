@@ -179,12 +179,12 @@ Authenticating a user with the second factor should be initiated when the user
 has successfully passed the first factor of authentication (e.g. the valid user
 credentials have been provided) and the user's unique Id and email address are known.
 
-The `Rublon.auth()` method will check the user's protection status (using
+The `Rublon.Auth()` method will check the user's protection status (using
 the email address) and return a URL address for the web browser to be redirected to
 (if user protection is active) or `null` in case the user's protection is not active.
 
 <table>
-	<caption><code>Rublon.auth()</code> method arguments</caption>
+	<caption><code>Rublon.Auth()</code> method arguments</caption>
 	<thead><tr>
 		<th>Name</th>
 		<th>Type</th>
