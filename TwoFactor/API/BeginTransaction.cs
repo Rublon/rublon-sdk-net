@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
-using Rublon;
 using Rublon.Sdk.Core;
-using System.Diagnostics;
 
 namespace Rublon.Sdk.TwoFactor
 {

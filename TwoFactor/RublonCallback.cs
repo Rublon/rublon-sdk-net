@@ -1,5 +1,4 @@
-﻿using Rublon.Sdk.Core;
-using Rublon.Sdk.Core.Exception;
+﻿using Rublon.Sdk.Core.Exception;
 
 namespace Rublon.Sdk.TwoFactor
 {

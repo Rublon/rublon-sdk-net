@@ -1,6 +1,6 @@
 ﻿namespace Rublon.Sdk.Core.Exception
 {
- 
+
     public class CallbackException : RublonException
     {
         public CallbackException(string message)
