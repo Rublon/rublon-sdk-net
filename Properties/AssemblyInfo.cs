@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Rublon SDK")]
-[assembly: AssemblyDescription("Rublon SDK for .Net Framework")]
+[assembly: AssemblyDescription("Rublon SDK for .Net")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ADIPS Sp. z o.o.")]
 [assembly: AssemblyProduct("Rublon SDK")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyCopyright("ADIPS Sp. z o.o. ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
