@@ -1,5 +1,5 @@
 ﻿
-Rublon NET SDK
+Rublon .NET SDK
 ================
 
 
@@ -25,8 +25,8 @@ Table of Contents
 Introduction
 ------------
 
-The *Rublon .Net SDK* library is a client-side implementation of
-the [Rublon](https://rublon.com) authentication service written in C# (.Net Framework).
+The *Rublon .NET SDK* library is a client-side implementation of
+the [Rublon](https://rublon.com) authentication service written in C# (.NET Framework).
 It forms a convenient C# coding language facade for the service's REST interface.
 
 <a id="intro-use-cases"></a>
@@ -94,7 +94,7 @@ the authentication using this library.
 
 ### First steps
 
-To start using the Rublon .Net SDK library you should:
+To start using the Rublon .NET SDK library you should:
 
 *	install the Rublon mobile app on your smartphone,
 	create a new account and confirm your email address,
