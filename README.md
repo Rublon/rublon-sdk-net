@@ -28,6 +28,7 @@ Introduction
 The *Rublon .NET SDK* library is a client-side implementation of
 the [Rublon](https://rublon.com) authentication service written in C# (.NET Framework).
 It forms a convenient C# coding language facade for the service's REST interface.
+
 The library is available on <a href="https://www.nuget.org/packages/Rublon/">Nuget</a>.
 
 <a id="intro-use-cases"></a>
