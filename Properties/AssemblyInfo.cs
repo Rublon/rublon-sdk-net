@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Rublon")]
-[assembly: AssemblyDescription("Rublon SDK for .Net")]
+[assembly: AssemblyDescription("Rublon SDK for .NET")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ADIPS Sp. z o.o.")]
-[assembly: AssemblyProduct("Rublon SDK")]
+[assembly: AssemblyProduct("Rublon")]
 [assembly: AssemblyCopyright("ADIPS Sp. z o.o. ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.1.0")]
+[assembly: AssemblyFileVersion("1.0.1.0")]
