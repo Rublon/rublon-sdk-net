@@ -7,21 +7,21 @@ namespace Rublon.Sdk.Core
     /// In order for the class to work properly, it must be initiated with two parameters: System Token and the Secret Key.
     /// Both of parameters can be obtained from developer dashboard at developers.rublon.com.
     /// </summary>
-    public class RublonConsumer
+    public class RublonConsumer : IRublonConsumer
     {
 
         /// <summary>
         /// Default API server.
         /// </summary>
         public const string DEFAULT_API_SERVER = "https://core.rublon.net";
-       
+
         /// <summary>
         /// Default language code.
         /// </summary>
         public const string DEFAULT_LANG = "en";
 
         protected string systemToken;
-        protected string secretKey;        
+        protected string secretKey;
 
         /// <summary>
         /// Initializes RublonConsumer.

@@ -7,7 +7,7 @@ namespace Rublon.Sdk.TwoFactor
     /// <summary>
     /// Rublon 2-factor service provider class.
     /// </summary>
-    public class Rublon : RublonConsumer
+    public class Rublon : RublonConsumer, IRublon
     {
 
         public const string FIELD_LANG = "lang";
@@ -36,7 +36,7 @@ namespace Rublon.Sdk.TwoFactor
         /// <param name="userId">User's ID in local system.</param>
         /// <param name="userEmail">User's email address.</param>
         /// <returns>web URI to Rublon prompt for the created transaction</returns>
-        public string Auth(string callbackUrl, string userId, string userEmail)
+        public virtual string Auth(string callbackUrl, string userId, string userEmail)
         {
             return Auth(callbackUrl, userId, userEmail, new JObject());
         }
@@ -49,7 +49,7 @@ namespace Rublon.Sdk.TwoFactor
         /// <param name="userEmail">User's email address.</param>
         /// <param name="consumerParams">Additional transaction parameters. The class <seealso cref="ConsumerParamsBuilder"/> is a builder which can be used to build proper consumer params.</param>
         /// <returns>web URI to Rublon prompt for the created transaction</returns>
-        public string Auth(string callbackUrl, string userId, string userEmail, JObject consumerParams)
+        public virtual string Auth(string callbackUrl, string userId, string userEmail, JObject consumerParams)
         {
             TestConfiguration();
 
@@ -62,7 +62,7 @@ namespace Rublon.Sdk.TwoFactor
             beginTransaction.Logger = Logger;
             beginTransaction.Perform();
             return beginTransaction.GetWebURI();
-        }        
+        }
 
         /// <summary>
         /// Finishes authentication for given accessToken and get user's credentials using one-time use access token.
