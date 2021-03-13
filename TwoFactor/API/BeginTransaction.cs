@@ -40,7 +40,7 @@ namespace Rublon.Sdk.TwoFactor
         /// <param name="userEmail">User's email address.</param>
         /// <param name="userId">User's local ID.</param>
         /// <param name="consumerParams">Additional transaction parameters.</param>
-        public BeginTransaction(Rublon rublon, string callbackUrl, string userEmail, string userId, JObject consumerParams)
+        public BeginTransaction(IRublon rublon, string callbackUrl, string userEmail, string userId, JObject consumerParams)
             : base(rublon)
         {
             this.callbackUrl = callbackUrl;

@@ -10,7 +10,7 @@ namespace Rublon.Sdk.Core
         public const string FIELD_RESULT = "result";
         public const string FIELD_SYSTEM_TOKEN = "systemToken";
 
-        protected RublonConsumer rublon;
+        protected IRublonConsumer rublon;
         protected string rawResponseBody;
         protected string responseStatus;
         protected JObject methodCallResponse;
@@ -31,7 +31,7 @@ namespace Rublon.Sdk.Core
         /// Construct the API method instance.
         /// </summary>
         /// <param name="rublon"></param>
-        public APIMethod(RublonConsumer rublon)
+        public APIMethod(IRublonConsumer rublon)
         {
             this.rublon = rublon;
             RestClient = new RESTClient(rublon.SecretKey);
