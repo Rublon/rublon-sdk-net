@@ -50,7 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\APIMethod.cs" />
-    <Compile Include="Core\ConsumerParamsBuilder.cs" />
+    <Compile Include="Core\ParamsBuilder.cs" />
     <Compile Include="Core\IRublonConsumer.cs" />
     <Compile Include="Core\Validation\DefaultAPIResponseValidator.cs" />
     <Compile Include="Core\Exception\APIException.cs" />
@@ -76,6 +76,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="README.md" />
+    <None Include="rublonSDK.pfx" />
     <None Include="rublonSDKSNK.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

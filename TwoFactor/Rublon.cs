@@ -47,7 +47,7 @@ namespace Rublon.Sdk.TwoFactor
         /// <param name="callbackUrl">Callback URL address.</param>
         /// <param name="userId">User's ID in local system.</param>
         /// <param name="userEmail">User's email address.</param>
-        /// <param name="consumerParams">Additional transaction parameters. The class <seealso cref="ConsumerParamsBuilder"/> is a builder which can be used to build proper consumer params.</param>
+        /// <param name="consumerParams">Additional transaction parameters. The class <seealso cref="ParamsBuilder"/> is a builder which can be used to build proper consumer params.</param>
         /// <returns>web URI to Rublon prompt for the created transaction</returns>
         public virtual string Auth(string callbackUrl, string userId, string userEmail, JObject consumerParams)
         {
