@@ -24,12 +24,12 @@ namespace Rublon.Sdk.Core
         /// </summary>
         public const string STATE_ERROR = "error";
 
-        protected RublonConsumer rublon;
+        protected IRublonConsumer rublon;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public RublonHttpCallback(RublonConsumer rublon)
+        public RublonHttpCallback(IRublonConsumer rublon)
         {
             rublon.TestConfiguration();
             this.rublon = rublon;

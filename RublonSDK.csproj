@@ -50,7 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\APIMethod.cs" />
-    <Compile Include="Core\ConsumerParamsBuilder.cs" />
+    <Compile Include="Core\ParamsBuilder.cs" />
+    <Compile Include="Core\IRublonConsumer.cs" />
     <Compile Include="Core\Validation\DefaultAPIResponseValidator.cs" />
     <Compile Include="Core\Exception\APIException.cs" />
     <Compile Include="Core\Exception\CallbackException.cs" />
@@ -68,16 +69,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TwoFactor\API\BeginTransaction.cs" />
     <Compile Include="TwoFactor\API\Credentials.cs" />
+    <Compile Include="TwoFactor\IRublon.cs" />
     <Compile Include="TwoFactor\Rublon.cs" />
     <Compile Include="TwoFactor\RublonCallback.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="README.md" />
+    <None Include="rublonSDK.pfx" />
     <None Include="rublonSDKSNK.pfx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Rublon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

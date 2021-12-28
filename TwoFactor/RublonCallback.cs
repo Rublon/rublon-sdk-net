@@ -4,10 +4,10 @@ namespace Rublon.Sdk.TwoFactor
 {
     public abstract class RublonCallback : Core.RublonHttpCallback
     {
-        protected new Rublon rublon;
+        protected new IRublon rublon;
         protected Credentials credentials;
 
-        public RublonCallback(Rublon rublon)
+        public RublonCallback(IRublon rublon)
             : base(rublon)
         {
             this.rublon = rublon;
