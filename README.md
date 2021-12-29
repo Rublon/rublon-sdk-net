@@ -49,8 +49,7 @@ e.g. with a username and password (usually we call it first factor).
 It is a necessary step, because upon Rublon's initialization the service
 must receive certain information about the user:
 
-- a unique Id, stored in the system (inafter called **the integrated system**) implementing the Rublon service,
-- the user's email address.
+- the username, from Rublon for which authentication will be called, (usually it is the same as username from the integrated system).
 
 To experience the full measure of two-factor authentication, the end-user
 should install the Rublon mobile app, available on all leading smartphone
@@ -64,15 +63,14 @@ a Email2FA process which does not require using an additional device of any kind
 
 #### User protection
 
-User protection is active when a user's email address in the integrated system
+User protection is active when a username in the integrated system
 can be matched to a user in the Rublon service.
-For this purpose, the user's email is sent to Rublon servers.
+For this purpose, the username is sent to Rublon servers.
 
-1. If the email is matched to an existing Rublon account, the user's identity
+1. If the username is matched to an existing Rublon account, the user's identity
 can be confirmed using Rublon.
-2. Otherwise, if the user does not possess a Rublon account (the email
-could not be matched), Rublon will use the Email2FA process, trying to verify
-the user's identity by sending a confirmation email message to his email address.
+2. Otherwise, if the user does not possess a Rublon account (the username
+could not be matched), Rublon will start an enrollment process.
 
 #### Identity confirmation
 
@@ -160,7 +158,8 @@ An example of the library's initialization:
 		var rublon = new Rublon(
 			// system token:
 			"A69FC450848B4B94A040416DC4421523",
-			// secret key:			"bLS6NDP7pGjg346S4IHqTHgQQjjSLw3CyApvz5iRjYzgIPN4e9EOi1cQJLrTlvLoHY8zeqg4ILrItYidKJ6JjEUZaA6pR1tZMwSZ"
+			// secret key:			
+			"bLS6NDP7pGjg346S4IHqTHgQQjjSLw3CyApvz5iRjYzgIPN4e9EOi1cQJLrTlvLoHY8zeqg4ILrItYidKJ6JjEUZaA6pR1tZMwSZ"
 		);
 
 <a id="auth"></a>
@@ -179,42 +178,36 @@ Administrator can force users to authenticate using the mobile app (to avoid the
 
 Authenticating a user with the second factor should be initiated when the user
 has successfully passed the first factor of authentication (e.g. the valid user
-credentials have been provided) and the user's unique Id and email address are known.
+credentials have been provided) and the user's unique Id is known.
 
-The `Rublon.Auth()` method will check the user's protection status (using
-the email address) and return a URL address for the web browser to be redirected to
+The `Rublon.Auth()` method will check the user's protection status and return a URL address for the web browser to be redirected to
 (if user protection is active) or `null` in case the user's protection is not active.
 
 <table>
-	<caption><code>Rublon.Auth()</code> method arguments</caption>
+	<caption><code>Rublon.Auth()</code> method has one argument of type <code>AuthenticationParameters</code> with the following fields</caption>
 	<thead><tr>
-		<th>Name</th>
+		<th>Property Name</th>
 		<th>Type</th>
 		<th>Description</th>
 	</tr></thead>
 	<tbody>
             <tr>
-                <td><code>callbackUrl</code></td>
+                <td><code>CallbackUrl</code></td>
                 <td>String</td><td>The integrated system's callback URL</td>
             </tr>
             <tr>
-                <td><code>appUserId</code></td>
+                <td><code>UserName</code></td>
                 <td>String</td>
-                <td>The integrated system's user's unique Id which will allow to log in the user upon successful authentication</td>
+                <td>The integrated system's username, which will allow to log in the user upon successful authentication and match the user to a Rublon account.</td>
             </tr>
             <tr>
-                <td><code>userEmail</code></td><td>String</td>
-                <td>The user's email address in the integrated system which will allow to check the user's protection status and match the user to a Rublon account</td>
+                <td><code>UserEmail</code></td><td>String</td>
+                <td>The user's email address. This is a optional parameter and can be empty. If set the email addresss will be set in Rublon for the given username</td>
             </tr>
             <tr>
-                <td><code>consumerParams</code></td>
+                <td><code>AdditionalParams</code></td>
                 <td>JSONObject</td>
-                <td>Additional transaction parameters (optional)</td>
-            </tr>
-            <tr>
-                <td><code>isPasswordless</code></td>
-                <td>boolean</td>
-                <td>Information if it is a login attempt using passwordless method (optional)</td>
+                <td>Additional transaction parameters (optional), which will be send to Rublon, the ParamsBuilder class can be used to prepare parameters easily</td>
             </tr>
         </tbody>
 </table>
@@ -259,10 +252,10 @@ An example of logging in a user on an integrated system:
 		
 		try { // Initiate a Rublon authentication transaction
 		
-			String url = rublon.Auth(
-				"http://example.com/rublon_callback", // callback URL
-				Session.getUser().getId(), // User Id
-				Session.getUser().getEmail() // User email
+			String url = rublon.Auth(new AuthenticationParameters(){
+					CallbackUrl = "http://example.com/rublon_callback", 
+					Username = Session.getUser().getId()
+				}
 			);
 			
 			if (url != null) { // User protection is active

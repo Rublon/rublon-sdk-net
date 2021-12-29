@@ -17,8 +17,7 @@ namespace Rublon.Sdk.Core
 
         public static class RublonCommonParams
         {
-            public const string FIELD_USER_ID = "appUserId";
-
+            public const string USERNAME_FIELD = "username";
         }
 
         public RESTClient RestClient { get; set; }
@@ -43,10 +42,10 @@ namespace Rublon.Sdk.Core
         public void Perform()
         {
             var rawPostBody = string.Empty;
-            var parameters = getParams();
-            if (parameters != null && parameters.Count > 0)
+            var requestBodyJSON = prepareRequestBody();
+            if (requestBodyJSON != null && requestBodyJSON.Count > 0)
             {
-                rawPostBody = parameters.ToString();
+                rawPostBody = requestBodyJSON.ToString();
             }
 
             var url = getUrl();
@@ -72,7 +71,7 @@ namespace Rublon.Sdk.Core
         /// Get the API request's parameters object.
         /// </summary>
         /// <returns></returns>
-        protected virtual JObject getParams()
+        protected virtual JObject prepareRequestBody()
         {
             var parameters = new JObject();
             parameters.Add(FIELD_SYSTEM_TOKEN, rublon.SystemToken);
