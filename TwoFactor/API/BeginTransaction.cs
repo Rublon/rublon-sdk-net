@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Rublon.Sdk.Core;
+using System;
 
 namespace Rublon.Sdk.TwoFactor
 {
@@ -17,7 +18,7 @@ namespace Rublon.Sdk.TwoFactor
         protected string callbackUrl;
         protected string userEmail;
         protected string userId;
-        protected JObject consumerParams;
+        protected JObject additionalParams;
 
         /// <summary>
         /// Construct the API method instance.
@@ -25,9 +26,9 @@ namespace Rublon.Sdk.TwoFactor
         /// <param name="rublon">Rublon instance.</param>
         /// <param name="callbackUrl">URL of the callback method.</param>
         /// <param name="userEmail">User's email address.</param>
-        /// <param name="userId">User's local ID.</param>
-        public BeginTransaction(Rublon rublon, string callbackUrl, string userEmail, string userId)
-            : this(rublon, callbackUrl, userEmail, userId, new JObject())
+        /// <param name="userName">User's local ID.</param>
+        public BeginTransaction(Rublon rublon, string callbackUrl, string userEmail, string userName)
+            : this(rublon, callbackUrl, userEmail, userName, new JObject())
         {
 
         }
@@ -38,15 +39,15 @@ namespace Rublon.Sdk.TwoFactor
         /// <param name="rublon">Rublon instance.</param>
         /// <param name="callbackUrl">URL of the callback method.</param>
         /// <param name="userEmail">User's email address.</param>
-        /// <param name="userId">User's local ID.</param>
-        /// <param name="consumerParams">Additional transaction parameters.</param>
-        public BeginTransaction(IRublon rublon, string callbackUrl, string userEmail, string userId, JObject consumerParams)
+        /// <param name="userName">User's local ID.</param>
+        /// <param name="additionalParams">Additional transaction parameters.</param>
+        public BeginTransaction(IRublon rublon, string callbackUrl, string userEmail, string userName, JObject additionalParams)
             : base(rublon)
         {
             this.callbackUrl = callbackUrl;
             this.userEmail = userEmail;
-            this.userId = userId;
-            this.consumerParams = consumerParams;
+            this.userId = userName;
+            this.additionalParams = additionalParams;
         }
 
         /// <summary>
@@ -63,16 +64,23 @@ namespace Rublon.Sdk.TwoFactor
             return rublon.APIServer + REQUEST_URI_PATH;
         }
 
-        protected override JObject getParams()
+        protected override JObject prepareRequestBody()
         {
-            var baseParameters = base.getParams();
-            var parameters = new JObject(consumerParams);
+            var baseParameters = base.prepareRequestBody();
+            var parameters = new JObject(additionalParams);
             parameters.Merge(baseParameters);
-            parameters.Add(RublonCommonParams.FIELD_USER_ID, userId);
+            parameters.Add(RublonCommonParams.USERNAME_FIELD, userId);
             parameters.Add(FIELD_CALLBACK_URL, callbackUrl);
-            parameters.Add(FIELD_USER_EMAIL, userEmail.ToLower());
-
+            addUserEmailIfNotEmpty(parameters);            
             return parameters;
+        }
+
+        private void addUserEmailIfNotEmpty(JObject parameters)
+        {
+            if (!String.IsNullOrWhiteSpace(userEmail))
+            {
+                parameters.Add(FIELD_USER_EMAIL, userEmail.ToLower());
+            }
         }
     }
 }
