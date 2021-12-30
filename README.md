@@ -135,19 +135,11 @@ Library initialization
 To initialize the library you need to instantiate a `Rublon` class object.
 Its constructor takes three arguments.
 
-<table>
-	<caption><code>Rublon</code> class constructor arguments</caption>
-	<thead><tr>
-		<th>Name</th>
-		<th>Type</th>
-		<th>Description</th>
-	</tr></thead>
-	<tbody>
-		<tr><td><code>systemToken</code></td><td>String</td><td>Your system's public Id</td></tr>
-		<tr><td><code>secretKey</code></td><td>String</td><td>Secret key</td></tr>
-		<tr><td><code>apiServer</code></td><td>String</td><td>(optional) API Server URI</td></tr>
-	</tbody>
-</table>
+| Name        	| Type   	| Description               	|
+|-------------	|--------	|---------------------------	|
+| systemToken 	| String 	| Your system's public Id   	|
+| secretKey   	| String 	| Secret key                	|
+| apiServer   	| String 	| (optional) API Server URI 	|
 
 An example of the library's initialization:
 
@@ -183,34 +175,15 @@ credentials have been provided) and the user's unique Id is known.
 The `Rublon.Auth()` method will check the user's protection status and return a URL address for the web browser to be redirected to
 (if user protection is active) or `null` in case the user's protection is not active.
 
-<table>
-	<caption><code>Rublon.Auth()</code> method has one argument of type <code>AuthenticationParameters</code> with the following fields</caption>
-	<thead><tr>
-		<th>Property Name</th>
-		<th>Type</th>
-		<th>Description</th>
-	</tr></thead>
-	<tbody>
-            <tr>
-                <td><code>CallbackUrl</code></td>
-                <td>String</td><td>The integrated system's callback URL</td>
-            </tr>
-            <tr>
-                <td><code>UserName</code></td>
-                <td>String</td>
-                <td>The integrated system's username, which will allow to log in the user upon successful authentication and match the user to a Rublon account.</td>
-            </tr>
-            <tr>
-                <td><code>UserEmail</code></td><td>String</td>
-                <td>The user's email address. This is a optional parameter and can be empty. If set the email addresss will be set in Rublon for the given username</td>
-            </tr>
-            <tr>
-                <td><code>AdditionalParams</code></td>
-                <td>JSONObject</td>
-                <td>Additional transaction parameters (optional), which will be send to Rublon, the ParamsBuilder class can be used to prepare parameters easily</td>
-            </tr>
-        </tbody>
-</table>
+<code>Rublon.Auth()</code> method has one argument of type <code>AuthenticationParameters</code> with the following fields:
+	
+
+|   Property Name  	|    Type    	|                                                                   Description                                                                   	|
+|:----------------:	|:----------:	|:-----------------------------------------------------------------------------------------------------------------------------------------------:	|
+| CallbackUrl      	| String     	| The integrated system's callback URL                                                                                                            	|
+| UserName         	| String     	| The integrated system's username, which will allow to log in the user upon successful authentication and match the user to a Rublon account.    	|
+| UserEmail        	| String     	| The user's email address. This is a optional parameter and can be empty. If set the email addresss will be set in Rublon for the given username 	|
+| AdditionalParams 	| JSONObject 	| Additional transaction parameters (optional), which will be send to Rublon, the ParamsBuilder class can be used to prepare parameters easily    	|
 
 <a id="auth-example"></a>
 
@@ -309,18 +282,11 @@ i.e. the finalization of the authentication (logging in or identity confirmation
 
 The callback URL will receive its input arguments in the URL address itself (*query string*).
 
-<table>
-	<caption>Callback URL arguments</caption>
-	<thead><tr>
-		<th>Name</th>
-		<th>Type</th>
-		<th>Description</th>
-	</tr></thead>
-	<tbody>
-		<tr><td><code>rublonState</code></td><td>String</td><td>Authentication result: <code>ok</code>, <code>error</code> or <code>cancel</code></td></tr>
-		<tr><td><code>rublonToken</code></td><td>String</td><td>Access token (100 alphanumeric characters, upper- and lowercase), which allows authentication's verification using a background Rublon API connection</td></tr>
-	</tbody>
-</table>
+| Name        	| Type   	| Description |
+|-------------	|--------	|-------------------------------------------------------------------------------------------------------------------------------------------------------	|
+| rublonState 	| String 	| Authentication result: ok, error or cancel                                                                                                            	|
+| rublonToken 	| String 	| Access token (100 alphanumeric characters, upper- and lowercase), which allows authentication's verification using a background Rublon API connection 	|
+		
 
 <div class="block">
 Notice: If the callback URL has been set to e.g. <code>http://example.com/twofactor/auth/</code>,
@@ -340,17 +306,11 @@ process you need to create a `RublonCallback` subclass instance.
 Because the `RublonCallback` class in abstract you need to create a subclass
 that implement needed methods which depend on your system details.
 
-<table>
-	<caption><code>RublonCallback</code> class constructor method arguments</caption>
-	<thead><tr>
-		<th>Name</th>
-		<th>Type</th>
-		<th>Description</th>
-	</tr></thead>
-	<tbody>
-		<tr><td><code>rublon</code></td><td>Rublon</td><td>An instance of the <code>Rublon</code> class.</td></tr>
-	</tbody>
-</table>
+<code>RublonCallback</code> class constructor method arguments
+
+| Name   	| Type   	| Description                      	|
+|--------	|--------	|----------------------------------	|
+| rublon 	| Rublon 	| An instance of the Rublon class. 	|
 
 Next, the `RublonCallback.Call()` method should be called.
 
