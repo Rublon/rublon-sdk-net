@@ -16,7 +16,7 @@ namespace Rublon.Sdk.TwoFactor
         /// </summary>
         /// <param name="rublon">Rublon instance.</param>
         /// <param name="accessToken">Access token.</param>
-        public Credentials(Rublon rublon, string accessToken)
+        public Credentials(IRublon rublon, string accessToken)
             : base(rublon)
         {
             this.accessToken = accessToken;
@@ -26,7 +26,7 @@ namespace Rublon.Sdk.TwoFactor
         /// Get the user's local ID from the response.
         /// </summary>
         /// <returns></returns>
-        public string GetUsername()
+        public virtual string GetUsername()
         {
             return methodCallResponse.Value<string>(RublonCommonParams.USERNAME_FIELD);
         }
