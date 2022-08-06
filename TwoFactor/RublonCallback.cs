@@ -24,7 +24,7 @@ namespace Rublon.Sdk.TwoFactor
                 var accessToken = GetAccessToken();
                 credentials = rublon.GetCredentials(accessToken);
                 var userId = credentials.GetUsername();
-                UserAuthenticated(userId);
+                UserAuthenticated(userId, credentials.GetAdditionalParams());
             }
             catch (ConnectionException ex)
             {
