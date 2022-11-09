@@ -1,4 +1,5 @@
-﻿using Rublon.Sdk.Core.Exception;
+﻿using Newtonsoft.Json.Linq;
+using Rublon.Sdk.Core.Exception;
 
 namespace Rublon.Sdk.Core
 {
@@ -64,12 +65,12 @@ namespace Rublon.Sdk.Core
             }
         }
 
-        
         /// <summary>
         /// Handle authentication success.
         /// </summary>
         /// <param name="profileId"></param>
-        protected abstract void UserAuthenticated(string profileId);
+        /// <param name="additionalParams">additional params send during begin request</param>
+        protected abstract void UserAuthenticated(string profileId, JObject additionalParams);
 
         /// <summary>
         /// Handle state "error".
