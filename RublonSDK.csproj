@@ -77,7 +77,6 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="README.md" />
-    <None Include="RublonDotNetSDK.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

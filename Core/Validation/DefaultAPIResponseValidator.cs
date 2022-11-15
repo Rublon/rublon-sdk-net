@@ -70,8 +70,18 @@ namespace Rublon.Sdk.Core.Validation
                 throw new APIException.InvalidJSONException(RestClient);
             }
 
-            HttpStatusCode statusCode = RestClient.GetHTTPStatusCode();
-            if ((int)statusCode >= 500 && (int)statusCode <= 599)
+            ValidateHttpStatus(RestClient.GetHTTPStatusCode());
+
+            responseResult = response.Value<JObject>(FIELD_RESULT);
+            if (responseResult == null || responseResult.Count == 0)
+            {
+                throw new APIException.MissingFieldException(RestClient, FIELD_RESULT);
+            }
+        }
+
+        private void ValidateHttpStatus(HttpStatusCode statusCode)
+        {
+            if (((int)statusCode >= 500 && (int)statusCode <= 599) || (int)statusCode == 499 || (int)statusCode == 429)
                 throw new APIException.InvalidCoreResponseHttpStatus(string.Format("Server error occured: {0}", statusCode), response);
             else
             {
@@ -80,12 +90,6 @@ namespace Rublon.Sdk.Core.Validation
                 {
                     throw new APIException(RestClient, "Unexpected response HTTP status code: " + RestClient.GetHTTPStatusCode());
                 }
-            }
-
-            responseResult = response.Value<JObject>(FIELD_RESULT);
-            if (responseResult == null || responseResult.Count == 0)
-            {
-                throw new APIException.MissingFieldException(RestClient, FIELD_RESULT);
             }
         }
 
