@@ -81,7 +81,7 @@ namespace Rublon.Sdk.Core.Validation
 
         private void ValidateHttpStatus(HttpStatusCode statusCode)
         {
-            if (((int)statusCode >= 500 && (int)statusCode <= 599) || (int)statusCode == 499 || (int)statusCode == 429)
+            if ((int)statusCode >= 500 && (int)statusCode <= 599)
                 throw new APIException.InvalidCoreResponseHttpStatus(string.Format("Server error occured: {0}", statusCode), response);
             else
             {
