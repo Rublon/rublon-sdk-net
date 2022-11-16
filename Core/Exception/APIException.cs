@@ -44,9 +44,13 @@ namespace Rublon.Sdk.Core.Exception
         [Serializable]
         public class InvalidCoreResponseHttpStatus : RublonException
         {
+            public JObject Response { get; set; }
             public InvalidCoreResponseHttpStatus() : base() { }
             public InvalidCoreResponseHttpStatus(string message) : base(message) { }
-            public InvalidCoreResponseHttpStatus(string message, JObject response) : base(message) { }
+            public InvalidCoreResponseHttpStatus(string message, JObject response) : base(message)
+            {
+                Response = response;
+            }
             public InvalidCoreResponseHttpStatus(string message, System.Exception innerException) : base(message, innerException) { }
         }
 
