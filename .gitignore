@@ -8,3 +8,5 @@
 /.vs
 /.vs/slnx.sqlite
 /.vs/ProjectSettings.json
+/nuget.exe
+/RublonSDK.nuspec
