@@ -59,12 +59,6 @@ namespace Rublon.Sdk.Core.Validation
 
         private void assertResponseContentAndResponseCodeIsValidOrThrow()
         {
-            bool isHttpCodeWhichCanBeHandled = RestClient.GetHTTPStatusCode() == HttpStatusCode.OK || RestClient.GetHTTPStatusCode() == HttpStatusCode.BadRequest;
-            if (!isHttpCodeWhichCanBeHandled)
-            {
-                throw new APIException(RestClient, "Unexpected response HTTP status code: " + RestClient.GetHTTPStatusCode());
-            }
-
             if (RestClient.RawResponse == null)
             {
                 throw new APIException(RestClient, "Empty response body.");
@@ -76,10 +70,26 @@ namespace Rublon.Sdk.Core.Validation
                 throw new APIException.InvalidJSONException(RestClient);
             }
 
+            ValidateHttpStatus(RestClient.GetHTTPStatusCode());
+
             responseResult = response.Value<JObject>(FIELD_RESULT);
             if (responseResult == null || responseResult.Count == 0)
             {
                 throw new APIException.MissingFieldException(RestClient, FIELD_RESULT);
+            }
+        }
+
+        private void ValidateHttpStatus(HttpStatusCode statusCode)
+        {
+            if ((int)statusCode >= 500 && (int)statusCode <= 599)
+                throw new APIException.InvalidCoreResponseHttpStatus(string.Format("Server error occured: {0}", statusCode), response);
+            else
+            {
+                bool isHttpCodeWhichCanBeHandled = statusCode == HttpStatusCode.OK || statusCode == HttpStatusCode.BadRequest;
+                if (!isHttpCodeWhichCanBeHandled)
+                {
+                    throw new APIException(RestClient, "Unexpected response HTTP status code: " + RestClient.GetHTTPStatusCode());
+                }
             }
         }
 

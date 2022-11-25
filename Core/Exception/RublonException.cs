@@ -2,6 +2,7 @@
 {
     public class RublonException : System.Exception
     {
+        public RublonException() : base() { }
         public RublonException(string message)
             : base(message)
         {

@@ -1,4 +1,5 @@
-﻿using Rublon.Sdk.Core.Rest;
+﻿using Newtonsoft.Json.Linq;
+using Rublon.Sdk.Core.Rest;
 using System;
 
 namespace Rublon.Sdk.Core.Exception
@@ -38,6 +39,19 @@ namespace Rublon.Sdk.Core.Exception
         public RESTClient Client
         {
             get { return client; }
+        }
+
+        [Serializable]
+        public class InvalidCoreResponseHttpStatus : RublonException
+        {
+            public JObject Response { get; set; }
+            public InvalidCoreResponseHttpStatus() : base() { }
+            public InvalidCoreResponseHttpStatus(string message) : base(message) { }
+            public InvalidCoreResponseHttpStatus(string message, JObject response) : base(message)
+            {
+                Response = response;
+            }
+            public InvalidCoreResponseHttpStatus(string message, System.Exception innerException) : base(message, innerException) { }
         }
 
         public class EmptyInputException : APIException

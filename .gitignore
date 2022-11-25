@@ -1,3 +1,12 @@
 /bin
 /obj
 /packages
+/RublonDotNetSDK.pfx
+/.vs/RublonSDK/v16/.suo
+/.vs/rublon-sdk-net/v16.suo
+/.vs/rublon-sdk-net/v16/.suo
+/.vs
+/.vs/slnx.sqlite
+/.vs/ProjectSettings.json
+/nuget.exe
+/RublonSDK.nuspec
