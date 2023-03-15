@@ -70,6 +70,7 @@ namespace Rublon.Sdk.Core.Rest
         /// <exception cref="ConnectionException">When the problem with connecting to the Rublon server occurred</exception>
         public virtual string PerformRequest(string url, string rawPostBody)
         {
+            ApplySystemWebProxy(httpRequest);
             setupHTTPRequest(url,rawPostBody);
             rawResponse = string.Empty;
             try
@@ -100,6 +101,21 @@ namespace Rublon.Sdk.Core.Rest
                 throw new ConnectionException("Error occurred while connecting to the Core", ex);
             }
             return rawResponse;
+        }
+
+        private void ApplySystemWebProxy(HttpWebRequest request)
+        {
+            WebProxy proxy = WebRequest.DefaultWebProxy as WebProxy;
+            if (ProxyVerified(proxy))
+                request.Proxy = proxy;
+        }
+
+        private bool ProxyVerified(WebProxy proxy)
+        {
+            if (proxy != null && !string.IsNullOrWhiteSpace(proxy.Address.AbsoluteUri))
+                return true;
+            else
+                return false;
         }
 
         protected void setupHTTPRequest(string url, string rawPostBody)
