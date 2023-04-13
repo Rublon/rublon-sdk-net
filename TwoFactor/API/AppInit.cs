@@ -1,12 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Win32;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Rublon.Sdk.Core;
-using System;
-using System.Collections.Generic;
-using System.Deployment.Application;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rublon.Sdk.TwoFactor.API
 {
@@ -14,7 +10,11 @@ namespace Rublon.Sdk.TwoFactor.API
     {
         public const string REQUEST_URI_PATH = "/api/app/init";
         public const string FIELD_APP_VERSION = "appVer";
-        public const string FIELD_SDK_VERSION = "systemToken";
+        public const string FIELD_PARAMS = "params";
+        public const string FIELD_SDK_VERSION = "sdkVer";
+        public const string FIELD_SYSTEM_VERSION = "systemVersion";
+        public const string FIELD_SYSTEM_BUILD = "systemBuild";
+        public static readonly string BASE_REGISTRY_PATH = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
 
         protected string AppVersion { get; set; } = "";
         public string CurrentVersion
@@ -37,9 +37,22 @@ namespace Rublon.Sdk.TwoFactor.API
 
         protected override JObject prepareRequestBody()
         {
+            string systemName = "";
+            string systemBuild = "";
+            using (RegistryKey keyHandle = Registry.LocalMachine.OpenSubKey(BASE_REGISTRY_PATH))
+            { 
+                systemName = keyHandle.GetValue("ProductName").ToString();
+                systemBuild = keyHandle.GetValue("CurrentBuildNumber").ToString();
+            }
+
             var parameters = base.prepareRequestBody();
             parameters.Add(FIELD_APP_VERSION, AppVersion);
-            parameters.Add(FIELD_SDK_VERSION, CurrentVersion);
+            string[,] requestParameters = new string[,] { { FIELD_SDK_VERSION, CurrentVersion },
+                                                          { FIELD_SYSTEM_VERSION, systemName },
+                                                          { FIELD_SYSTEM_BUILD, systemBuild } 
+                                                        };
+            string param = JsonConvert.SerializeObject(requestParameters);
+            parameters.Add(FIELD_PARAMS, param);
             return parameters;
         }
     }
