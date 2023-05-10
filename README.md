@@ -30,7 +30,8 @@ the [Rublon](https://rublon.com) authentication service written in C# (.NET Fram
 It forms a convenient C# coding language facade for the service's REST interface.
 
 The library is available on <a href="https://www.nuget.org/packages/Rublon/">Nuget</a>.
-Targeted Framework: .Net 4.5
+
+Minimum required version of the .NET Framework: 4.5
 
 <a id="intro-use-cases"></a>
 
