@@ -1,195 +1,158 @@
-﻿
-Rublon .NET SDK
-================
+# Rublon .NET SDK
 
+## Table of Contents
 
-Table of Contents
------------------
+1. [Overview](#overview)
+2. [Use Cases](#use-cases)
+3. [Supported Authentication Methods](#supported-authentication-methods)
+4. [Before You Start](#before-you-start)
+   * Create an Application in the Rublon Admin Console
+   * Optional: Install Rublon Authenticator
+5. [Configuration](#configuration)
+   * INFO: Initial Assumptions
+   * INFO: Modifying the Library
+   * Initialize the Library
+   * Perform Authentication
+   * Finalize Authentication
+6. [Troubleshooting](#troubleshooting)
 
-1. [Introduction](#intro)
-	* [Use cases](#intro-use-cases)
-	* [Principles of operation](#intro-how-it-works)
-	* [First steps](#intro-first-steps)
-	* [Examples' assumptions](#intro-examples)
-	* [Modifying the library](#intro-mods)
-2. [Library initialization](#initialize)
-3. [Signing in](#auth)
-	* [Example code](#auth-example)
-4. [Authentication finalization](#callback)
-	* [Input params](#callback-input)
-	* [Authentication verification](#callback-verification)
-	* [Example code](#callback-example)
-	
-<a id="intro"></a>
+<a id="overview"></a>
 
-Introduction
-------------
+## Overview
 
-The *Rublon .NET SDK* library is a client-side implementation of
-the [Rublon](https://rublon.com) authentication service written in C# (.NET Framework).
-It forms a convenient C# coding language facade for the service's REST interface.
+The Rublon .NET SDK library is a client-side implementation of the Rublon API written in C# (.NET Framework). It forms a convenient C# coding language facade for Rublon API's REST interface.
 
-The library is available on <a href="https://www.nuget.org/packages/Rublon/">Nuget</a>.
+The library is available on [NuGet](https://www.nuget.org/packages/Rublon/).
 
 Minimum required version of the .NET Framework: 4.5
 
-<a id="intro-use-cases"></a>
+<a id="use-cases"></a>
 
-### Use cases
+## Use Cases
 
-Rublon provides an additional secury layer:
+Rublon adds an extra layer of security by prompting the user to authenticate using an extra authentication method such as Mobile Push.
+Even if a malicious actor compromises the user's password, the hacker would not be able to log in to the user's account because the second secure factor will thwart them.
 
-1.	**during logging in to your system**, adding a second (or additional)
-	authentication factor,
-2.	**while conducting a security-sensitive transactions**,
-	providing a user the means for identity confirmation before changing passwords
-	or conducting a money transfer.
+Rublon can add an extra layer of security in the following two use cases:
+1. **When a user signs in to a system** (after the user enters the correct password)
+2. **When a user undergoes a security-sensitive transaction** (such as changing the password or conducting a money transfer)
+   
+When a user signs in to a system, the second authentication factor should be initiated only after:
+- the user has successfully completed the first authentication factor (e.g., entered the correct password)
+- the username (and optionally, email address) have been gathered
 
-To be able to perform an additional authentication using Rublon,
-the user must first be authenticated in a different way,
-e.g. with a username and password (usually we call it first factor).
-It is a necessary step, because upon Rublon's initialization the service
-must receive certain information about the user:
+<a id="supported-authentication-methods"></a>
 
-- the username, from Rublon for which authentication will be called, (usually it is the same as username from the integrated system).
+## Supported Authentication Methods
 
-To experience the full measure of two-factor authentication, the end-user
-should install the Rublon mobile app, available on all leading smartphone
-systems. However, having those with older phone devices in mind or those
-who do not want to install any additional apps on their phones, we prepared
-a Email2FA process which does not require using an additional device of any kind.
+- [Mobile Push](https://rublon.com/product/mobile-push/) - Approve the authentication request by tapping a push notification displayed on the Rublon Authenticator mobile app.
+- [Mobile Passcodes](https://rublon.com/product/mobile-passcodes/) (TOTP) - Enter the TOTP code (Time-Based One Time Password) using the Rublon Authenticator mobile app.
+- [SMS Passcodes](https://rublon.com/product/sms-passcodes/) - Enter the verification code from the SMS sent to your mobile phone number.
+- [QR Codes](https://rublon.com/product/qr-codes/) - scan a QR code using the Rublon Authenticator mobile app.
+- [Email Links](https://rublon.com/product/email-link/) - Click the verification link sent to your email address.
+- [WebAuthn/U2F Security Keys](https://rublon.com/product/security-keys/) - Insert the security key into the USB port of your computer and touch it.
+- [YubiKey OTP](https://rublon.com/product/yubikey-otp/) - Insert the YubiKey and tap it to automatically enter the OTP into the text field.
 
-<a id="intro-how-it-works"></a>
+<a id="before-you-start"></a>
 
-### Principles of operation
+## Before You Start
 
-#### User protection
+Before you start implementing the Rublon .NET SDK library into your code, you must create an application in the Rublon Admin Console. We also recommend that you install the Rublon Authenticator mobile app.
 
-User protection is active when a username in the integrated system
-can be matched to a user in the Rublon service.
-For this purpose, the username is sent to Rublon servers.
+### Create an Application in the Rublon Admin Console
+1. Sign up for the Rublon Admin Console. [Here’s how](https://rublon.com/doc/admin-console/#rublon-account-registration).
+2. In the Rublon Admin Console, go to the **Applications** tab and click **Add Application**.
+3. Enter a name for your application and then set the type to **Other**.
+4. Click **Save** to add the new .NET SDK application in the Rublon Admin Console.
+5. Copy and save the values of **System Token** and **Secret Key**. You are going to need these values later.
+   
+### Optional: Install Rublon Authenticator
 
-1. If the username is matched to an existing Rublon account, the user's identity
-can be confirmed using Rublon.
-2. Otherwise, if the user does not possess a Rublon account (the username
-could not be matched), Rublon will start an enrollment process.
+For increased security of Multi-Factor Authentication (MFA), end-users are recommended to install the [Rublon Authenticator](https://rublon.com/product/rublon-authenticator/) mobile app.
+   
+Download the Rublon Authenticator for:
+- [Android](https://play.google.com/store/apps/details?id=com.rublon.authenticator&hl=en)
+- [iOS](https://apps.apple.com/us/app/rublon-authenticator/id1434412791)
 
-#### Identity confirmation
+After installing the mobile app, users can authenticate using the following authentication methods:
+- [Mobile Push](https://rublon.com/product/mobile-push/)
+- [Mobile Passcode](https://rublon.com/product/mobile-passcodes/)
+- [QR Code](https://rublon.com/product/qr-codes/)
 
-If the library finds an active user protection, a URL address pointing to Rublon
-servers will be generated. The user's web browser must be then redirected
-to that URL in order to carry out the identity confirmation.
+In some cases, users may not want to install any additional apps on their phones. Also, some users own older phones that do not support modern mobile applications. These users can authenticate using one of the following authentication methods instead:
+- [SMS Passcode](https://rublon.com/product/sms-passcodes/)
+- [Email Link](https://rublon.com/product/email-link/)
+- [WebAuthn/U2F Security Keys](https://rublon.com/product/security-keys/)
+- [YubiKey OTP](https://rublon.com/product/yubikey-otp/)
 
-If the web browser is the user's Trusted Device, the authentication will be
-performed automatically and invisibly. Otherwise, the user will be asked
-to scan a QR code using the Rublon mobile app or to click the verification
-link sent to his email address, or other authentication method upon which the authentication will be performed.
+<a id="configuration"></a>
 
-#### Return to the integrated system
+## Configuration
 
-After a successful authentication, the web browser will be redirected to
-a callback URL address which points to the integrated system servers.
-The integrated system should intercept that URL, retrieve its params and finalize
-the authentication using this library.
+Follow the steps below to configure Rublon .NET SDK.
 
-<a id="intro-first-steps"></a>
+### INFO: Initial Assumptions
 
-### First steps
+Let’s assume there is a session handler class `Session`. It has access to an object that stores user data of the currently logged-in user. Also, let’s assume there is the `HttpServer` class which is a simple HTTP server instance.
 
-To start using the Rublon .NET SDK library you should:
+### INFO: Modifying the Library
 
-*	install the Rublon mobile app on your smartphone,
-	create a new account and confirm your email address,
-*	visit the Rublon [Rublon Admin Console](https://admin.rublon.net)
-	and log in,
-*	go to the "Add the application" form (Applications -> Add)
-    and fill in the required fields,
-*	copy the provided **system token** and **secret key**,
-	which will be used to identify the integrated system and verify
-	the authenticity and integrity of the messages exchanged with Rublon API.
+The `Rublon` class implements a few public methods, which, when needed, can be overridden with inheritance.
 
-<a id="intro-examples"></a>
+We strongly discourage you from modifying any part of the library, as it usually leads to difficulties during library updates. If you need to change the flow or internal structure of the `Rublon` or `RublonCallback` classes, do not hesitate to subclass them according to your needs.
 
-### Examples' assumptions
+### Initialize the Library
+To initialize the Rublon .NET SDK library, you need to instantiate a `Rublon` class object. Its constructor takes three arguments.
 
-In the following examples we assume the existence of the session handler
-class `Session`, which has access to an object storing the currently logged
-in user data and the `HttpServer` class which is a simple HTTP server instance.
+<table>
+	<caption><code>Rublon</code> class constructor arguments</caption>
+	<thead><tr>
+		<th>Name</th>
+		<th>Type</th>
+		<th>Description</th>
+	</tr></thead>
+	<tbody>
+		<tr><td><code>systemToken</code></td><td>String</td><td>The System Token value you copied from the Rublon Admin Console.</td></tr>
+		<tr><td><code>secretKey</code></td><td>String</td><td>The Secret Key value you copied from the Rublon Admin Console.</td></tr>
+		<tr><td><code>apiServer</code></td><td>String</td><td>Optional.<br/><br/>Rublon API Server URI.<br/><br/>Default:<br/>https://core.rublon.net</td></tr>
+	</tbody>
+</table>
 
-<a id="intro-mods"></a>
+### Example .NET Code
 
-### Modifying the library
+	using Rublon.Sdk.twofactor.Rublon;
 
-The `Rublon` class implements a few public methods, which, when needed,
-can be overriden with inheritance.
-
-We strongly discourage you from modifying any part of the library, as it usually
-leads to difficulties during future library updates. If you need to change the flow
-or internal structure of the `Rublon` or `RublonCallback`
-classes, don't hesitate to subclass them according to your needs.
-
-
-<a id="initialize"></a>
-
-Library initialization
-----------------------
-
-To initialize the library you need to instantiate a `Rublon` class object.
-Its constructor takes three arguments.
-
-| Name        	| Type   	| Description               	|
-|-------------	|--------	|---------------------------	|
-| systemToken 	| String 	| Your system's public Id   	|
-| secretKey   	| String 	| Secret key                	|
-| apiServer   	| String 	| (optional) API Server URI 	|
-
-An example of the library's initialization:
-
-		using Rublon.Sdk.twofactor.Rublon;
-		
-		...
-		
-		var rublon = new Rublon(
-			// system token:
-			"A69FC450848B4B94A040416DC4421523",
-			// secret key:			
-			"bLS6NDP7pGjg346S4IHqTHgQQjjSLw3CyApvz5iRjYzgIPN4e9EOi1cQJLrTlvLoHY8zeqg4ILrItYidKJ6JjEUZaA6pR1tZMwSZ"
-		);
-
-<a id="auth"></a>
-
-Signing in
-------------
-
-Rublon protects users during their signing in processes. Even if a someone
-lears the user's password with malicious intent, such a person would be unable
-to log in to the user's account, because a physical access to the Rublon mobile app
-(installed in the user's smartphone) or to his email account is needed.
-
-<p class="notice">
-Administrator can force users to authenticate using the mobile app (to avoid the Email2FA process).
-</p>
-
-Authenticating a user with the second factor should be initiated when the user
-has successfully passed the first factor of authentication (e.g. the valid user
-credentials have been provided) and the user's unique Id is known.
-
-The `Rublon.Auth()` method will check the user's protection status and return a URL address for the web browser to be redirected to
-(if user protection is active) or `null` in case the user's protection is not active.
-
-<code>Rublon.Auth()</code> method has one argument of type <code>AuthenticationParameters</code> with the following fields:
+	...
 	
+	var rublon = new Rublon(
+		// system token:
+		"A69FC450848B4B94A040416DC4421523",
+		// secret key:
+		"bLS6NDP7pGjg346S4IHqTHgQQjjSLw3CyApvz5iRjYzgIPN4e9EOi1cQJLrTlvLoHY8zeqg4ILrItYidKJ6JjEUZaA6pR1tZMwSZ"
+	);
 
-|   Property Name  	|    Type    	|                                                                   Description                                                                   	|
-|:----------------:	|:----------:	|:-----------------------------------------------------------------------------------------------------------------------------------------------:	|
-| CallbackUrl      	| String     	| The integrated system's callback URL                                                                                                            	|
-| UserName         	| String     	| The integrated system's username, which will allow to log in the user upon successful authentication and match the user to a Rublon account.    	|
-| UserEmail        	| String     	| The user's email address. This is a optional parameter and can be empty. If set the email addresss will be set in Rublon for the given username 	|
-| AdditionalParams 	| JSONObject 	| Additional transaction parameters (optional), which will be send to Rublon, the ParamsBuilder class can be used to prepare parameters easily    	|
+### Perform Authentication
 
-<a id="auth-example"></a>
+The `Rublon.Auth()` method uses the username to check the user's protection status and returns a URL address the user should be redirected to in their web browser. The method returns `null` if the user's protection is not active.
 
-### Example code
+The `Rublon.Auth()` method has one argument of type `AuthenticationParameters` with the following fields:
+
+<table>
+	<caption><code>Rublon.Auth()</code> method arguments</caption>
+	<thead><tr>
+		<th>Property Name</th>
+		<th>Type</th>
+		<th>Description</th>
+	</tr></thead>
+	<tbody>
+		<tr><td><code>CallbackUrl</code></td><td>String</td><td>Required.<br/><br/>The integrated system's callback URL.<br/><br/>Rublon will redirect the user to this URL after successful authentication</td></tr>
+		<tr><td><code>UserName</code></td><td>String</td><td>Required.<br/><br/>The user's unique ID, which allows to check the user's protection status and match the user to a Rublon account.<br/><br/>Required.</td></tr>
+		<tr><td><code>UserEmail</code></td><td>JSONObject</td><td>Optional.<br/><br/>The user's email address. This is an optional parameter and can be empty. If set, the email address will be set in the Rublon Admin Console for the given username.</td></tr>
+		<tr><td><code>AdditionalParams</code></td><td>JSONObject</td><td>Optional.<br/><br/>Additional transaction parameters (optional). You can use the ParamsBuilder class to prepare parameters easily.</td></tr>
+	</tbody>
+</table>
+
+### Example .NET Code
 
 An example of logging in a user on an integrated system:
 
@@ -256,77 +219,61 @@ An example of logging in a user on an integrated system:
 	
 	}
 
-If the user's account is protected by Rublon, calling the `Rublon.Auth()`
-method will return a URL address pointing to Rublon servers, which the user's
-browser should redirect to in order to verify a Trusted Device or go through authentication methods provided by Rublon .
+**Note**: Make sure that your code checks that the user is not signed in. The user should be signed in only after successful Rublon authentication.
 
-<p class="notice">
-Because the user's web browser will be redirected to Rublon servers in order
-to confirm the user's identity, the user should be logged out
-(if he/she was logged in before) to prevent creating a user session.
-Otherwise Rublon will not protect the user effectively, because returning
-to the integrated system before a proper Rublon authentication is performed
-may grant the user access to an active logged in session in the system.
-The user should be logged in only after a successful Rublon authentication.
-</p>
+### Finalize Authentication
 
-<a id="callback"></a>
+After successful authentication, Rublon redirects the user to the callback URL. The callback flow continues and finalizes the authentication process.
 
-Authentication finalization
----------------------------
-
-After a successful authentication Rublon will redirect the user's browser
-to the callback URL. The callback flow continues the authentication process,
-i.e. the finalization of the authentication (logging in or identity confirmation).
-
-<a id="callback-input"></a>
-### Input params
+#### Input Params
 
 The callback URL will receive its input arguments in the URL address itself (*query string*).
 
-| Name        	| Type   	| Description |
-|-------------	|--------	|-------------------------------------------------------------------------------------------------------------------------------------------------------	|
-| rublonState 	| String 	| Authentication result: ok, error or cancel                                                                                                            	|
-| rublonToken 	| String 	| Access token (100 alphanumeric characters, upper- and lowercase), which allows authentication's verification using a background Rublon API connection 	|
-		
+<table>
+	<caption>Callback URL arguments</caption>
+	<thead><tr>
+		<th>Name</th>
+		<th>Type</th>
+		<th>Description</th>
+	</tr></thead>
+	<tbody>
+		<tr><td><code>rublonState</code></td><td>String</td><td>Authentication result: <code>ok</code>, <code>error</code> or <code>cancel</code></td></tr>
+		<tr><td><code>rublonToken</code></td><td>String</td><td>Access token (100 alphanumeric characters, upper- and lowercase), which allows verifying the authentication using a background Rublon API connection</td></tr>
+	</tbody>
+</table>
 
-<div class="block">
-Notice: If the callback URL has been set to e.g. <code>http://example.com/twofactor/auth/</code>,
-the params will be appended to the URL address:
-<pre><code>http://example.com/twofactor/auth/?rublonState=ok&rublonToken=Kmad4hAS...d</code></pre>
-If your callback URL should be formed differently (e.g. when using an URL rewrite),
-you can set the callback URL's template using the meta-tags:
-<code>%rublonToken%</code> and <code>%rublonState%</code>, like so:<br />
-<pre><code>http://example.com/twofactor/auth/%rublonState%/%rublonToken%</code></pre>
-</div>
+**Note**: If the callback URL has been set to, e.g., `http://example.com/twofactor/auth/`, the params will be appended to the URL address:
+`http://example.com/twofactor/auth/?rublonState=ok&rublonToken=Kmad4hAS...d`
 
-<a id="callback-verification"></a>
-### Authentication verification
+**Note**: If you want to construct the callback URL differently (e.g., by using URL Rewrite), you can set the callback URL's template using the meta-tags: `%rublonToken%` and `%rublonState%`, like so:
+`http://example.com/twofactor/auth/%rublonState%/%rublonToken%`
 
-After the callback is invoked, for proper finalization of the authentication
-process you need to create a `RublonCallback` subclass instance.
-Because the `RublonCallback` class in abstract you need to create a subclass
-that implement needed methods which depend on your system details.
+#### Handle Authentication Result
 
-<code>RublonCallback</code> class constructor method arguments
+After the callback is invoked, you need to create a `RublonCallback` subclass instance to properly finalize authentication. Since the `RublonCallback` class is abstract, you need to create a subclass that implements the methods you need. The implementation is up to you and depends on your requirements and unique system details.
 
-| Name   	| Type   	| Description                      	|
-|--------	|--------	|----------------------------------	|
-| rublon 	| Rublon 	| An instance of the Rublon class. 	|
+<table>
+	<caption><code>RublonCallback</code> class constructor method arguments</caption>
+	<thead><tr>
+		<th>Name</th>
+		<th>Type</th>
+		<th>Description</th>
+	</tr></thead>
+	<tbody>
+		<tr><td>rublon</td><td>Rublon</td><td>An instance of the Rublon class.</td></tr>
+	</tbody>
+</table>
 
-Next, the `RublonCallback.Call()` method should be called.
+Next, call the `RublonCallback.Call()` method.
 
-The following abstract methods should be implemented in a subclass.
+You should implement the following abstract methods in a subclass.
+- `String GetState()` - returns the "rublonState" parameter from the HTTP GET request.
+- `String GetAccessToken()` - returns the "rublonToken" parameter from the HTTP GET request.
+- `void HandleCancel()` - called when the state parameter is not "ok" nor "error".
+- `void HandleError()` - called when the state parameter value is "error".
+- `void UserAuthenticated(String appUserId)` - handle the authenticated user with given user's local ID.
 
-- `String getState()` - returns the "rublonState" parameter from the HTTP GET request.
-- `String getAccessToken()` - returns the "rublonToken" parameter from the HTTP GET request.
-- `void handleCancel()` - called when the state parameter is not "ok" nor "error".
-- `void handleError()` - called when the state parameter value is "error".
-- `void userAuthenticated(String appUserId)` - handle the authenticated user with given user's local ID.
-
-
-<a id="callback-example"></a>
-### Example code
+#### Example .NET Code
 
 An example implementation of the `RublonCallback` class and usage in the callback:
 
@@ -367,4 +314,8 @@ An example implementation of the `RublonCallback` class and usage in the callbac
 		HttpServer.setResponse("There was an error, please try again later. " + e.getMessage());
 	}
 
+<a id="troubleshooting"></a>
 
+## Troubleshooting
+
+If you encounter any issues with your Rublon integration, please contact [Rublon Support](https://rublon.com/support/).
