@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Rublon.Sdk.Core;
+using Rublon.Sdk.Core.Validation;
+using System;
 using System.Reflection;
 
 namespace Rublon.Sdk.TwoFactor.API
@@ -28,6 +30,7 @@ namespace Rublon.Sdk.TwoFactor.API
         public AppInit(IRublon rublon, string appVersion) : base(rublon)
         {
             AppVersion = appVersion;
+            ResponseValidator = new CheckApplicationAPIResponseValidator();
         }     
 
         protected override string getUrl()
@@ -47,12 +50,11 @@ namespace Rublon.Sdk.TwoFactor.API
 
             var parameters = base.prepareRequestBody();
             parameters.Add(FIELD_APP_VERSION, AppVersion);
-            string[,] requestParameters = new string[,] { { FIELD_SDK_VERSION, CurrentVersion },
-                                                          { FIELD_SYSTEM_VERSION, systemName },
-                                                          { FIELD_SYSTEM_BUILD, systemBuild } 
-                                                        };
-            string param = JsonConvert.SerializeObject(requestParameters);
-            parameters.Add(FIELD_PARAMS, param);
+            string[] requestParameters = new string[]  { string.Format(@"""{0}"":""{1}""",FIELD_SDK_VERSION, CurrentVersion),
+                                                           string.Format(@"""{0}"":""{1}""",FIELD_SYSTEM_VERSION, systemName) ,
+                                                           string.Format(@"""{0}"":""{1}""",FIELD_SYSTEM_BUILD, systemBuild) };
+
+            parameters.Add(FIELD_PARAMS, JToken.FromObject(requestParameters));
             return parameters;
         }
     }

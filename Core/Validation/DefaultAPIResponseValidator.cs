@@ -2,6 +2,7 @@
 using Rublon.Sdk.Core.Exception;
 using Rublon.Sdk.Core.Rest;
 using Rublon.Sdk.Core.Signature;
+using System;
 using System.Net;
 
 namespace Rublon.Sdk.Core.Validation
@@ -9,8 +10,8 @@ namespace Rublon.Sdk.Core.Validation
     internal class DefaultAPIResponseValidator : IAPIResponseValidator
     {
 
-        private JObject response;
-        private JObject responseResult;
+        protected JObject response;
+        protected JObject responseResult;
 
         public const string STATUS_OK = "OK";
         public const string STATUS_ERROR = "ERROR";
@@ -33,7 +34,7 @@ namespace Rublon.Sdk.Core.Validation
 
         public string SecretKey { get; set; }
 
-        public void validateResponse()
+        public virtual void validateResponse()
         {
             assertResponseContentAndResponseCodeIsValidOrThrow();
 
@@ -57,7 +58,7 @@ namespace Rublon.Sdk.Core.Validation
             }
         }
 
-        private void assertResponseContentAndResponseCodeIsValidOrThrow()
+        protected virtual void assertResponseContentAndResponseCodeIsValidOrThrow()
         {
             if (RestClient.RawResponse == null)
             {
@@ -79,7 +80,7 @@ namespace Rublon.Sdk.Core.Validation
             }
         }
 
-        private void ValidateHttpStatus(HttpStatusCode statusCode)
+        protected void ValidateHttpStatus(HttpStatusCode statusCode)
         {
             if ((int)statusCode >= 500 && (int)statusCode <= 599)
                 throw new APIException.InvalidCoreResponseHttpStatus(string.Format("Server error occured: {0}", statusCode), response);
@@ -93,7 +94,7 @@ namespace Rublon.Sdk.Core.Validation
             }
         }
 
-        private void assertSignatureIsValidOrThrow()
+        protected void assertSignatureIsValidOrThrow()
         {
             var signature = RestClient.GetSignature();
             if (signature == null)

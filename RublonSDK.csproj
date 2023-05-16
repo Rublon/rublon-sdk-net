@@ -53,6 +53,7 @@
     <Compile Include="Core\APIMethod.cs" />
     <Compile Include="Core\ParamsBuilder.cs" />
     <Compile Include="Core\IRublonConsumer.cs" />
+    <Compile Include="Core\Validation\CheckApplicationAPIResponseValidator.cs" />
     <Compile Include="Core\Validation\DefaultAPIResponseValidator.cs" />
     <Compile Include="Core\Exception\APIException.cs" />
     <Compile Include="Core\Exception\CallbackException.cs" />
