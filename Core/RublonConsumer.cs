@@ -13,7 +13,7 @@ namespace Rublon.Sdk.Core
         /// <summary>
         /// Default API server.
         /// </summary>
-        public const string DEFAULT_API_SERVER = "https://core.rublon.net";
+        public const string DEFAULT_API_SERVER = "https://staging-core.rublon.net";
 
         /// <summary>
         /// Default language code.

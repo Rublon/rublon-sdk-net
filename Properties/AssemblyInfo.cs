@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Rublon")]
 [assembly: AssemblyDescription("Rublon SDK for .NET")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ADIPS Sp. z o.o.")]
+[assembly: AssemblyCompany("Rublon")]
 [assembly: AssemblyProduct("Rublon")]
-[assembly: AssemblyCopyright("ADIPS Sp. z o.o. ©  2022")]
+[assembly: AssemblyCopyright("Rublon © 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.3.0.0")]
-[assembly: AssemblyFileVersion("1.3.0.0")]
+[assembly: AssemblyVersion("1.3.2.0")]
+[assembly: AssemblyFileVersion("1.3.2.0")]

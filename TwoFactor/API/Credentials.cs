@@ -31,6 +31,11 @@ namespace Rublon.Sdk.TwoFactor
             return methodCallResponse.Value<string>(RublonCommonParams.USERNAME_FIELD);
         }
 
+        public string GetUserId()
+        {
+            return methodCallResponse.Value<string>(RublonCommonParams.FIELD_USER_ID);
+        }
+
         public virtual JObject GetAdditionalParams()
         {
             if (this.methodCallResponse.ContainsKey(ParamsBuilder.PARAMS_KEY))
