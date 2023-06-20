@@ -19,6 +19,7 @@ namespace Rublon.Sdk.Core
         public static class RublonCommonParams
         {
             public const string USERNAME_FIELD = "username";
+            public const string FIELD_USER_ID = "appUserId";
         }
 
         public RESTClient RestClient { get; set; }

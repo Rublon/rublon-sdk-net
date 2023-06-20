@@ -16,7 +16,6 @@ namespace Rublon.Sdk.Core.Validation
             assertResponseContentAndResponseCodeIsValidOrThrow();
 
             var status = response.Value<string>(FIELD_STATUS);
-            Console.WriteLine("Status: {0}", status);
             if (string.IsNullOrEmpty(status))
             {
                 throw new APIException.MissingFieldException(RestClient, FIELD_STATUS);
