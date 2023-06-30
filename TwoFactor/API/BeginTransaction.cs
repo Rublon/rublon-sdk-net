@@ -48,6 +48,7 @@ namespace Rublon.Sdk.TwoFactor
             this.userEmail = userEmail;
             this.userId = userName;
             this.additionalParams = additionalParams;
+            
         }
 
         /// <summary>

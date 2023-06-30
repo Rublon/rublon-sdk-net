@@ -22,14 +22,18 @@ namespace Rublon.Sdk.Core
 
         protected string systemToken;
         protected string secretKey;
+        protected string proxyHost;
+        protected int proxyPort;
+        protected string proxyUsername;
+        protected string proxyPassword;
 
         /// <summary>
         /// Initializes RublonConsumer.
         /// </summary>
         /// <param name="systemToken">Consumer's system token string.</param>
         /// <param name="secretKey">Consumer's secret key string.</param>
-        public RublonConsumer(string systemToken, string secretKey)
-            : this(systemToken, secretKey, DEFAULT_API_SERVER)
+        public RublonConsumer(string systemToken, string secretKey, string proxyHost, int proxyPort, string proxyUsername, string proxyPassword)
+            : this(systemToken, secretKey, DEFAULT_API_SERVER, proxyHost, proxyPort, proxyUsername, proxyPassword)
         {
         }
 
@@ -39,11 +43,15 @@ namespace Rublon.Sdk.Core
         /// <param name="systemToken">Consumer's system token string.</param>
         /// <param name="secretKey">Consumer's secret key string.</param>
         /// <param name="apiServer">API server's URI</param>
-        public RublonConsumer(string systemToken, string secretKey, string apiServer)
+        public RublonConsumer(string systemToken, string secretKey, string apiServer, string proxyHost, int proxyPort, string proxyUsername, string proxyPassword)
         {
             this.systemToken = systemToken;
             this.secretKey = secretKey;
             this.APIServer = apiServer;
+            this.proxyHost = proxyHost;
+            this.proxyPort = proxyPort;
+            this.proxyUsername = proxyUsername;
+            this.proxyPassword = proxyPassword;
         }
 
         /// <summary>
@@ -74,6 +82,12 @@ namespace Rublon.Sdk.Core
         {
             get { return systemToken; }
         }
+
+        public string ProxyHost { get { return proxyHost; } }
+        public int ProxyPort { get { return proxyPort; } }
+        public string ProxyUsername { get { return proxyUsername; } }
+        public string ProxyPassword { get { return proxyPassword; } }
+
 
         /// <summary>
         /// Get secret key.
