@@ -91,8 +91,6 @@ namespace Rublon.Sdk.Core.Rest
         /// <exception cref="ConnectionException">When the problem with connecting to the Rublon server occurred</exception>
         public virtual string PerformRequest(string url, string rawPostBody)
         {
-            
-            
             setupHTTPRequest(url,rawPostBody);
             ApplyProxy();
             rawResponse = string.Empty;
@@ -130,26 +128,16 @@ namespace Rublon.Sdk.Core.Rest
         {
             if (ProxyVerified())
             {
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 WebProxy proxy = new WebProxy(proxyHost, proxyPort);
                 if (!string.IsNullOrEmpty(proxyUsername))
                 {
-                    
+
                     ICredentials credentials = new NetworkCredential(proxyUsername, proxyPassword);
                     proxy.Credentials = credentials;
-                    httpRequest.Proxy = proxy;
                 }
-                else
-                {
-                    var cc = new CredentialCache();
-                    cc.Add(proxyHost, proxyPort,
-                        "NTLM",
-                        CredentialCache.DefaultNetworkCredentials);
-                    httpRequest.UseDefaultCredentials = true;
-                    proxy.Credentials = cc;
-                    httpRequest.Proxy = proxy;
-                    
-                    //httpRequest.Proxy.Credentials = cc;
-                }
+                httpRequest.Proxy = proxy;
             }
         }
 
