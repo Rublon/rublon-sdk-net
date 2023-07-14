@@ -126,19 +126,19 @@ namespace Rublon.Sdk.Core.Rest
 
         private void ApplyProxy()
         {
-            if (ProxyVerified())
-            {
+            //if (ProxyVerified())
+            //{
                 ServicePointManager.Expect100Continue = true;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-                WebProxy proxy = new WebProxy(proxyHost, proxyPort);
-                if (!string.IsNullOrEmpty(proxyUsername))
-                {
+                WebProxy proxy = new WebProxy("10.207.86.9:8080");
+                //if (!string.IsNullOrEmpty(proxyUsername))
+                //{
 
-                    ICredentials credentials = new NetworkCredential(proxyUsername, proxyPassword);
-                    proxy.Credentials = credentials;
-                }
+                //    ICredentials credentials = new NetworkCredential(proxyUsername, proxyPassword);
+                //    proxy.Credentials = credentials;
+                //}
                 httpRequest.Proxy = proxy;
-            }
+            //}
         }
 
         private bool ProxyVerified()
