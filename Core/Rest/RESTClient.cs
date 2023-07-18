@@ -1,5 +1,6 @@
 ﻿using Rublon.Sdk.Core.Exception;
 using Rublon.Sdk.Core.Signature;
+using Rublon.Sdk.TwoFactor;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -126,24 +127,25 @@ namespace Rublon.Sdk.Core.Rest
 
         private void ApplyProxy()
         {
-            if (ProxyVerified())
+            ProxySettings proxySettings = new ProxySettingsProvider().LoadSettings();
+            if (ProxyVerified(proxySettings))
             {
                 ServicePointManager.Expect100Continue = true;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-                WebProxy proxy = new WebProxy(string.Format("{0}:{1}", proxyHost, proxyPort));
+                WebProxy proxy = new WebProxy(string.Format("{0}:{1}", proxySettings.ProxyHost, proxySettings.ProxyPort));
                 if (!string.IsNullOrEmpty(proxyUsername))
                 {
 
-                    ICredentials credentials = new NetworkCredential(proxyUsername, proxyPassword);
+                    ICredentials credentials = new NetworkCredential(proxySettings.ProxyUsername, proxySettings.ProxyPassword);
                     proxy.Credentials = credentials;
                 }
                 httpRequest.Proxy = proxy;
             }
         }
 
-        private bool ProxyVerified()
+        private bool ProxyVerified(ProxySettings settings)
         {
-            if (!string.IsNullOrEmpty(proxyHost) && proxyPort != 0)
+            if (!string.IsNullOrEmpty(settings.ProxyHost) && settings.ProxyPort != 0)
                 return true;
             else
                 return false;

@@ -74,6 +74,8 @@
     <Compile Include="TwoFactor\API\Credentials.cs" />
     <Compile Include="TwoFactor\AuthenticationParameters.cs" />
     <Compile Include="TwoFactor\IRublon.cs" />
+    <Compile Include="TwoFactor\ProxySettings.cs" />
+    <Compile Include="TwoFactor\ProxySettingsProvider.cs" />
     <Compile Include="TwoFactor\Rublon.cs" />
     <Compile Include="TwoFactor\RublonCallback.cs" />
   </ItemGroup>
