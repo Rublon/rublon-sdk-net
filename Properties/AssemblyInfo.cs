@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Rublon")]
 [assembly: AssemblyDescription("Rublon SDK for .NET")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ADIPS Sp. z o.o.")]
+[assembly: AssemblyCompany("Rublon")]
 [assembly: AssemblyProduct("Rublon")]
-[assembly: AssemblyCopyright("ADIPS Sp. z o.o. ©  2022")]
+[assembly: AssemblyCopyright("Rublon © 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

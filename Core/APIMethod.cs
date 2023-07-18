@@ -2,6 +2,7 @@
 using Rublon.Sdk.Core.Logging;
 using Rublon.Sdk.Core.Rest;
 using Rublon.Sdk.Core.Validation;
+using System;
 
 namespace Rublon.Sdk.Core
 {
@@ -18,6 +19,7 @@ namespace Rublon.Sdk.Core
         public static class RublonCommonParams
         {
             public const string USERNAME_FIELD = "username";
+            public const string FIELD_USER_ID = "appUserId";
         }
 
         public RESTClient RestClient { get; set; }
@@ -52,6 +54,7 @@ namespace Rublon.Sdk.Core
             Logger.log(
                     string.Format("Starting request to core: url: {0}, {1}", url, rawPostBody)
                 );
+
             this.rawResponseBody = RestClient.PerformRequest(url, rawPostBody);
             Logger.log(
                     string.Format("Got response from core: {0}", this.rawResponseBody)
@@ -74,7 +77,12 @@ namespace Rublon.Sdk.Core
         protected virtual JObject prepareRequestBody()
         {
             var parameters = new JObject();
-            parameters.Add(FIELD_SYSTEM_TOKEN, rublon.SystemToken);
+            if (rublon.SystemToken == "")
+            {
+                parameters.Add(FIELD_SYSTEM_TOKEN, "A49F2206561C4FEBBFEEE178A2ED1FAA");
+            }
+            else
+                parameters.Add(FIELD_SYSTEM_TOKEN, rublon.SystemToken);
             return parameters;
         }
 
