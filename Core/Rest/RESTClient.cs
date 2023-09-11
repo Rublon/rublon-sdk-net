@@ -128,12 +128,13 @@ namespace Rublon.Sdk.Core.Rest
         private void ApplyProxy()
         {
             ProxySettings proxySettings = new ProxySettingsProvider().LoadSettings();
-            if (ProxyVerified(proxySettings))
+
+            if (!string.IsNullOrEmpty(proxySettings.ProxyHost) && proxySettings.ProxyPort != 0)
             {
                 ServicePointManager.Expect100Continue = true;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 WebProxy proxy = new WebProxy(string.Format("{0}:{1}", proxySettings.ProxyHost, proxySettings.ProxyPort));
-                if (!string.IsNullOrEmpty(proxyUsername))
+                if (!string.IsNullOrEmpty(proxySettings.ProxyUsername))
                 {
 
                     ICredentials credentials = new NetworkCredential(proxySettings.ProxyUsername, proxySettings.ProxyPassword);
@@ -141,14 +142,6 @@ namespace Rublon.Sdk.Core.Rest
                 }
                 httpRequest.Proxy = proxy;
             }
-        }
-
-        private bool ProxyVerified(ProxySettings settings)
-        {
-            if (!string.IsNullOrEmpty(settings.ProxyHost) && settings.ProxyPort != 0)
-                return true;
-            else
-                return false;
         }
 
         protected void setupHTTPRequest(string url, string rawPostBody)
