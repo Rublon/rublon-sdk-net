@@ -35,7 +35,7 @@ namespace Rublon.Sdk.Core
         public APIMethod(IRublonConsumer rublon)
         {
             this.rublon = rublon;
-            RestClient = new RESTClient(rublon.SecretKey, rublon.ProxyHost, rublon.ProxyPort, rublon.ProxyUsername, rublon.ProxyPassword);
+            RestClient = new RESTClient(rublon.SecretKey);
         }
 
         /// <summary>

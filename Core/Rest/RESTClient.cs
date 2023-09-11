@@ -52,11 +52,6 @@ namespace Rublon.Sdk.Core.Rest
         private HttpWebResponse response;
         private string secretKey;
 
-        private string proxyHost;
-        private int proxyPort;
-        private string proxyUsername;
-        private string proxyPassword;
-
         public RublonMessageSigner RublonMessageSigner
         {
             get;
@@ -67,14 +62,9 @@ namespace Rublon.Sdk.Core.Rest
         /// Constructs REST client instance with <paramref name="secretKey"/> which will be used to sign the message.
         /// </summary>
         /// <param name="secretKey">secret key</param>        
-        public RESTClient(string secretKey, string _proxyHost = "", int _proxyPort = 0,
-            string _proxyUsername = "", string _proxyPassword = "")
+        public RESTClient(string secretKey)
         {
             this.secretKey = secretKey;
-            proxyHost = _proxyHost;
-            proxyPort = _proxyPort;
-            proxyUsername = _proxyUsername;
-            proxyPassword = _proxyPassword;
         }
 
         public RESTClient() : this("") {  }

@@ -13,13 +13,13 @@ namespace Rublon.Sdk.TwoFactor
 
         public IRublonLogger Logger { get; set; } = new NullLogger();
 
-        public Rublon(string systemToken, string secretKey, string proxyHost = "", int proxyPort = 0, string proxyUsername = "", string proxyPassword = "")
-            : this(systemToken, secretKey, DEFAULT_API_SERVER, proxyHost, proxyPort, proxyUsername, proxyPassword)
+        public Rublon(string systemToken, string secretKey)
+            : this(systemToken, secretKey, DEFAULT_API_SERVER)
         {
         }
 
-        public Rublon(string systemToken, string secretKey, string apiServer, string proxyHost = "", int proxyPort = 0, string proxyUsername = "", string proxyPassword = "")
-            : base(systemToken, secretKey, apiServer, proxyHost, proxyPort, proxyUsername, proxyPassword)
+        public Rublon(string systemToken, string secretKey, string apiServer)
+            : base(systemToken, secretKey, apiServer)
         {
         }
 
