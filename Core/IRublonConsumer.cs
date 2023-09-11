@@ -7,6 +7,7 @@
         string SecretKey { get; }
         string SystemToken { get; }
 
+
         bool IsConfigured();
         void TestConfiguration();
     }

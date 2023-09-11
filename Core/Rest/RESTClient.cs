@@ -1,13 +1,21 @@
 ﻿using Rublon.Sdk.Core.Exception;
 using Rublon.Sdk.Core.Signature;
+using Rublon.Sdk.TwoFactor;
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 
 namespace Rublon.Sdk.Core.Rest
 {
     public class RESTClient
     {
+        private const string EVENT_LOG = "Rublon";
+        private const string EVENT_SOURCE = "Rublon";
+        private static EventLog _eventLog;
+
         public const int TIMEOUT = 30;
 
         public const string USER_AGENT = "rublon-net-sdk";
@@ -39,7 +47,7 @@ namespace Rublon.Sdk.Core.Rest
         /// </summary>
         public const string PLATFORM = ".NET";
 
-        private HttpWebRequest httpRequest;        
+        public HttpWebRequest httpRequest;        
         private string rawResponse;
         private HttpWebResponse response;
         private string secretKey;
@@ -59,7 +67,11 @@ namespace Rublon.Sdk.Core.Rest
             this.secretKey = secretKey;
         }
 
-        public RESTClient() : this("") { }
+        public RESTClient() : this("") {  }
+
+      
+
+
 
         /// <summary>
         /// Performs the request
@@ -71,6 +83,7 @@ namespace Rublon.Sdk.Core.Rest
         public virtual string PerformRequest(string url, string rawPostBody)
         {
             setupHTTPRequest(url,rawPostBody);
+            ApplyProxy();
             rawResponse = string.Empty;
             try
             {
@@ -100,6 +113,25 @@ namespace Rublon.Sdk.Core.Rest
                 throw new ConnectionException("Error occurred while connecting to the Core", ex);
             }
             return rawResponse;
+        }
+
+        private void ApplyProxy()
+        {
+            ProxySettings proxySettings = new ProxySettingsProvider().LoadSettings();
+
+            if (!string.IsNullOrEmpty(proxySettings.ProxyHost) && proxySettings.ProxyPort != 0)
+            {
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                WebProxy proxy = new WebProxy(string.Format("{0}:{1}", proxySettings.ProxyHost, proxySettings.ProxyPort));
+                if (!string.IsNullOrEmpty(proxySettings.ProxyUsername))
+                {
+
+                    ICredentials credentials = new NetworkCredential(proxySettings.ProxyUsername, proxySettings.ProxyPassword);
+                    proxy.Credentials = credentials;
+                }
+                httpRequest.Proxy = proxy;
+            }
         }
 
         protected void setupHTTPRequest(string url, string rawPostBody)

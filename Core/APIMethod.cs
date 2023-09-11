@@ -35,7 +35,7 @@ namespace Rublon.Sdk.Core
         public APIMethod(IRublonConsumer rublon)
         {
             this.rublon = rublon;
-            RestClient = new RESTClient("098e329c7f188f95363caf19b5853c");
+            RestClient = new RESTClient(rublon.SecretKey);
         }
 
         /// <summary>
