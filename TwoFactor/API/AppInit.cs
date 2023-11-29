@@ -25,7 +25,9 @@ namespace Rublon.Sdk.TwoFactor.API
         {
             get
             {
-                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                return string.Format("{0}.{1}.{2}", Assembly.GetExecutingAssembly().GetName().Version.Major,
+                    Assembly.GetExecutingAssembly().GetName().Version.Minor,
+                    Assembly.GetExecutingAssembly().GetName().Version.Build);
             }
         }
 
