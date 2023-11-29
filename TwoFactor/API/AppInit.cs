@@ -19,6 +19,8 @@ namespace Rublon.Sdk.TwoFactor.API
         public static readonly string BASE_REGISTRY_PATH = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
 
         protected string AppVersion { get; set; } = "";
+        protected string FailMode { get; set; } = "";
+        protected string SendUPN { get; set; }
         public string CurrentVersion
         {
             get
@@ -27,9 +29,11 @@ namespace Rublon.Sdk.TwoFactor.API
             }
         }
 
-        public AppInit(IRublon rublon, string appVersion) : base(rublon)
+        public AppInit(IRublon rublon, string appVersion, string failMode, string sendUPN) : base(rublon)
         {
             AppVersion = appVersion;
+            FailMode = failMode;
+            SendUPN = sendUPN;
             ResponseValidator = new CheckApplicationAPIResponseValidator();
         }     
 
@@ -49,10 +53,20 @@ namespace Rublon.Sdk.TwoFactor.API
             }
 
             var parameters = base.prepareRequestBody();
-            parameters.Add(FIELD_APP_VERSION, AppVersion);
-            string[] requestParameters = new string[]  { string.Format(@"""{0}"":""{1}""",FIELD_SDK_VERSION, CurrentVersion),
-                                                           string.Format(@"""{0}"":""{1}""",FIELD_SYSTEM_VERSION, systemName) ,
-                                                           string.Format(@"""{0}"":""{1}""",FIELD_SYSTEM_BUILD, systemBuild) };
+            parameters.Add(FIELD_APP_VERSION, AppVersion);           
+
+            var requestParameters = new 
+            {
+                sdkVer = CurrentVersion,
+                systemVersion = systemName,
+                systemBuild = systemBuild,
+
+                config = new
+                {
+                    FailMode = FailMode,
+                    SendUPN = SendUPN
+                }
+            };
 
             parameters.Add(FIELD_PARAMS, JToken.FromObject(requestParameters));
             return parameters;
