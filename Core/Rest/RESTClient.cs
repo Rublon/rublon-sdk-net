@@ -51,6 +51,10 @@ namespace Rublon.Sdk.Core.Rest
         private string rawResponse;
         private HttpWebResponse response;
         private string secretKey;
+        private string proxyHost;
+        private int proxyPort;
+        private string proxyUser;
+        private string proxyPassword;
 
         public RublonMessageSigner RublonMessageSigner
         {
@@ -62,12 +66,16 @@ namespace Rublon.Sdk.Core.Rest
         /// Constructs REST client instance with <paramref name="secretKey"/> which will be used to sign the message.
         /// </summary>
         /// <param name="secretKey">secret key</param>        
-        public RESTClient(string secretKey)
+        public RESTClient(string secretKey, string proxyHost, int proxyPort, string proxyUser, string proxyPassword)
         {
             this.secretKey = secretKey;
+            this.proxyHost = proxyHost;
+            this.proxyPort = proxyPort;
+            this.proxyUser = proxyUser;
+            this.proxyPassword = proxyPassword;
         }
 
-        public RESTClient() : this("") {  }
+        public RESTClient() : this("", "", 0, "", "") {  }
 
       
 
@@ -117,17 +125,18 @@ namespace Rublon.Sdk.Core.Rest
 
         private void ApplyProxy()
         {
-            ProxySettings proxySettings = new ProxySettingsProvider().LoadSettings();
-
-            if (!string.IsNullOrEmpty(proxySettings.ProxyHost) && proxySettings.ProxyPort != 0)
+            //ProxySettings proxySettings = new ProxySettingsProvider().LoadSettings();
+            if (!string.IsNullOrEmpty(proxyHost) && proxyPort != 0)
             {
                 ServicePointManager.Expect100Continue = true;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-                WebProxy proxy = new WebProxy(string.Format("{0}:{1}", proxySettings.ProxyHost, proxySettings.ProxyPort));
-                if (!string.IsNullOrEmpty(proxySettings.ProxyUsername))
+
+                WebProxy proxy = new WebProxy(string.Format("{0}:{1}", proxyHost, proxyPort));
+               
+                if (!string.IsNullOrEmpty(proxyUser))
                 {
 
-                    ICredentials credentials = new NetworkCredential(proxySettings.ProxyUsername, proxySettings.ProxyPassword);
+                    ICredentials credentials = new NetworkCredential(proxyUser, proxyPassword);
                     proxy.Credentials = credentials;
                 }
                 httpRequest.Proxy = proxy;

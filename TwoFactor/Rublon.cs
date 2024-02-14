@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using Rublon.Sdk.Core;
 using Rublon.Sdk.Core.Logging;
+using Rublon.Sdk.TwoFactor.API;
 
 namespace Rublon.Sdk.TwoFactor
 {
@@ -13,13 +14,13 @@ namespace Rublon.Sdk.TwoFactor
 
         public IRublonLogger Logger { get; set; } = new NullLogger();
 
-        public Rublon(string systemToken, string secretKey)
-            : this(systemToken, secretKey, DEFAULT_API_SERVER)
+        public Rublon(string systemToken, string secretKey, string proxyHost, int proxyPort, string proxyUser, string proxyPassword)
+            : this(systemToken, secretKey, DEFAULT_API_SERVER, proxyHost, proxyPort, proxyUser, proxyPassword)
         {
         }
 
-        public Rublon(string systemToken, string secretKey, string apiServer)
-            : base(systemToken, secretKey, apiServer)
+        public Rublon(string systemToken, string secretKey, string apiServer, string proxyHost, int proxyPort, string proxyUser, string proxyPassword)
+            : base(systemToken, secretKey, apiServer, proxyHost, proxyPort, proxyUser, proxyPassword)
         {
         }
 
@@ -58,6 +59,5 @@ namespace Rublon.Sdk.TwoFactor
             credentials.Perform();
             return credentials;
         }
-
     }
 }

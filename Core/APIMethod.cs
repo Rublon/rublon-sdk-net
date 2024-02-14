@@ -32,10 +32,13 @@ namespace Rublon.Sdk.Core
         /// Construct the API method instance.
         /// </summary>
         /// <param name="rublon"></param>
-        public APIMethod(IRublonConsumer rublon)
+        public APIMethod(IRublonConsumer rublon, string secretKey = "")
         {
             this.rublon = rublon;
-            RestClient = new RESTClient(rublon.SecretKey);
+            if (!string.IsNullOrEmpty(secretKey))
+                RestClient = new RESTClient(secretKey, "", 0, "", "");
+            else
+                RestClient = new RESTClient(rublon.SecretKey, rublon.ProxyHost, rublon.ProxyPort, rublon.ProxyUser, rublon.ProxyPassword);
         }
 
         /// <summary>
@@ -77,12 +80,7 @@ namespace Rublon.Sdk.Core
         protected virtual JObject prepareRequestBody()
         {
             var parameters = new JObject();
-            if (rublon.SystemToken == "")
-            {
-                parameters.Add(FIELD_SYSTEM_TOKEN, "A49F2206561C4FEBBFEEE178A2ED1FAA");
-            }
-            else
-                parameters.Add(FIELD_SYSTEM_TOKEN, rublon.SystemToken);
+            parameters.Add(FIELD_SYSTEM_TOKEN, rublon.SystemToken);
             return parameters;
         }
 

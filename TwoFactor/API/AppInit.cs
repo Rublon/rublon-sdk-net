@@ -21,6 +21,7 @@ namespace Rublon.Sdk.TwoFactor.API
         protected string AppVersion { get; set; } = "";
         protected string FailMode { get; set; } = "";
         protected string SendUPN { get; set; }
+        protected string Token { get; set; }
         public string CurrentVersion
         {
             get
@@ -31,11 +32,12 @@ namespace Rublon.Sdk.TwoFactor.API
             }
         }
 
-        public AppInit(IRublon rublon, string appVersion, string failMode, string sendUPN) : base(rublon)
+        public AppInit(IRublon rublon, string appVersion, string failMode, string sendUPN, string token, string key) : base(rublon, key)
         {
             AppVersion = appVersion;
             FailMode = failMode;
             SendUPN = sendUPN;
+            Token = token;
             ResponseValidator = new CheckApplicationAPIResponseValidator();
         }     
 
@@ -55,6 +57,7 @@ namespace Rublon.Sdk.TwoFactor.API
             }
 
             var parameters = base.prepareRequestBody();
+            parameters["systemToken"] = Token;
             parameters.Add(FIELD_APP_VERSION, AppVersion);           
 
             var requestParameters = new 

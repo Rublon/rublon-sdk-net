@@ -7,6 +7,11 @@
         string SecretKey { get; }
         string SystemToken { get; }
 
+        string ProxyHost { get; }
+        int ProxyPort { get; }
+        string ProxyUser { get; }
+        string ProxyPassword { get; }
+
 
         bool IsConfigured();
         void TestConfiguration();

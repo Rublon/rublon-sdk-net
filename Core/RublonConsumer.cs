@@ -22,14 +22,18 @@ namespace Rublon.Sdk.Core
 
         protected string systemToken;
         protected string secretKey;
+        protected string proxyHost;
+        protected int proxyPort;
+        protected string proxyUser;
+        protected string proxyPassword;
 
         /// <summary>
         /// Initializes RublonConsumer.
         /// </summary>
         /// <param name="systemToken">Consumer's system token string.</param>
         /// <param name="secretKey">Consumer's secret key string.</param>
-        public RublonConsumer(string systemToken, string secretKey)
-            : this(systemToken, secretKey, DEFAULT_API_SERVER)
+        public RublonConsumer(string systemToken, string secretKey, string proxyHost, int proxyPort, string proxyUser, string proxyPassword)
+            : this(systemToken, secretKey, DEFAULT_API_SERVER, proxyHost, proxyPort, proxyUser, proxyPassword)
         {
         }
 
@@ -39,11 +43,15 @@ namespace Rublon.Sdk.Core
         /// <param name="systemToken">Consumer's system token string.</param>
         /// <param name="secretKey">Consumer's secret key string.</param>
         /// <param name="apiServer">API server's URI</param>
-        public RublonConsumer(string systemToken, string secretKey, string apiServer)
+        public RublonConsumer(string systemToken, string secretKey, string apiServer, string proxyHost, int proxyPort, string proxyUser, string proxyPassword)
         {
             this.systemToken = systemToken;
             this.secretKey = secretKey;
             this.APIServer = apiServer;
+            this.proxyHost = proxyHost;
+            this.proxyPort = proxyPort;
+            this.proxyUser = proxyUser;
+            this.proxyPassword = proxyPassword;
         }
 
         /// <summary>
@@ -66,6 +74,11 @@ namespace Rublon.Sdk.Core
         {
             return !string.IsNullOrEmpty(this.systemToken) && !string.IsNullOrEmpty(this.secretKey);
         }
+
+        public string ProxyHost { get { return this.proxyHost; } }
+        public int ProxyPort { get { return this.proxyPort; } }
+        public string ProxyUser { get { return this.proxyUser; } }
+        public string ProxyPassword { get { return this.proxyPassword; } }
 
         /// <summary>
         /// Get system token.
