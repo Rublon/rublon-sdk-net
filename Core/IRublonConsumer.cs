@@ -11,6 +11,7 @@
         int ProxyPort { get; }
         string ProxyUser { get; }
         string ProxyPassword { get; }
+        int ProxyMode { get; }
 
 
         bool IsConfigured();

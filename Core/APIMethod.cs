@@ -36,9 +36,9 @@ namespace Rublon.Sdk.Core
         {
             this.rublon = rublon;
             if (!string.IsNullOrEmpty(secretKey))
-                RestClient = new RESTClient(secretKey, "", 0, "", "");
+                RestClient = new RESTClient(secretKey, "", 0, "", "", 0);
             else
-                RestClient = new RESTClient(rublon.SecretKey, rublon.ProxyHost, rublon.ProxyPort, rublon.ProxyUser, rublon.ProxyPassword);
+                RestClient = new RESTClient(rublon.SecretKey, rublon.ProxyHost, rublon.ProxyPort, rublon.ProxyUser, rublon.ProxyPassword, rublon.ProxyMode);
         }
 
         /// <summary>
